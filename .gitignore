@@ -1,0 +1,15 @@
+# Dữ liệu thật (transcript, kịch bản nội bộ, kết quả chấm) — KHÔNG commit
+data/
+out/
+*.eml
+# Credential
+.env
+*.key
+*credentials*.json
+gcp-key*.json
+service-account*.json
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

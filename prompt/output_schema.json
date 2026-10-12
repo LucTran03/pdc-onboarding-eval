@@ -1,0 +1,425 @@
+{
+  "$comment": "Cập nhật 2026-10-09 · draft v0.1 · Schema đầu ra cho model chấm onboarding. Dùng với google-genai: config.response_mime_type='application/json', config.response_json_schema=<file này>.",
+  "type": "object",
+  "required": [
+    "data_quality",
+    "activities_timeline",
+    "sequence",
+    "criteria",
+    "links",
+    "flags",
+    "strengths",
+    "improvements",
+    "summary_for_mentor"
+  ],
+  "properties": {
+    "data_quality": {
+      "type": "object",
+      "required": [
+        "transcript_coverage",
+        "speaker_confidence",
+        "speaker_mapping",
+        "issues",
+        "insufficient_data"
+      ],
+      "properties": {
+        "transcript_coverage": {
+          "type": "string",
+          "enum": [
+            "full",
+            "partial",
+            "poor"
+          ]
+        },
+        "speaker_confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "speaker_mapping": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "role"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "mentor",
+                  "parent",
+                  "student",
+                  "parent_or_student",
+                  "other"
+                ]
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "insufficient_data": {
+          "type": "boolean"
+        }
+      }
+    },
+    "activities_timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "activity",
+          "found"
+        ],
+        "properties": {
+          "activity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "found": {
+            "type": "boolean"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "duration_min": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "order_note": {
+      "type": "string"
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 37,
+      "maxItems": 37,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "rationale",
+          "evidence",
+          "missing_elements"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^OB(0[1-9]|[12][0-9]|3[0-7])$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "FF",
+              "PF",
+              "NF",
+              "NA",
+              "NE"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "missing_elements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sequence_issue": {
+            "type": "string",
+            "description": "Rỗng nếu đúng thứ tự"
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "rationale",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^LK0[1-6]$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DAT",
+              "DAT_MOT_PHAN",
+              "CHUA_DAT",
+              "KHONG_DU_DU_LIEU"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          }
+        }
+      }
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "severity",
+          "explanation",
+          "evidence",
+          "script_instructed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^F(0[1-9]|10)$"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "script_instructed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "strengths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "step_name",
+          "description",
+          "evidence"
+        ],
+        "properties": {
+          "criterion_id": {
+            "type": "string"
+          },
+          "step_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          }
+        }
+      }
+    },
+    "improvements": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "step_name",
+          "evidence",
+          "problem",
+          "logic_impact",
+          "suggestion",
+          "suggested_script",
+          "priority"
+        ],
+        "properties": {
+          "criterion_id": {
+            "type": "string"
+          },
+          "step_name": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "problem": {
+            "type": "string"
+          },
+          "logic_impact": {
+            "type": "string"
+          },
+          "suggestion": {
+            "type": "string"
+          },
+          "suggested_script": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          }
+        }
+      }
+    },
+    "summary_for_mentor": {
+      "type": "string"
+    },
+    "sequence": {
+      "type": "object",
+      "required": [
+        "status",
+        "observed_activity_order",
+        "deviations"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "DUNG_THU_TU",
+            "LECH_NHE",
+            "LECH_NGHIEM_TRONG",
+            "KHONG_DU_DU_LIEU"
+          ]
+        },
+        "observed_activity_order": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          }
+        },
+        "deviations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "rule_id",
+              "description",
+              "affected_criteria",
+              "evidence",
+              "severity"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "activity_order",
+                  "within_activity",
+                  "dependency"
+                ]
+              },
+              "rule_id": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "affected_criteria": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/evidence"
+                }
+              },
+              "severity": {
+                "type": "string",
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": [
+        "timestamp",
+        "speaker",
+        "quote"
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "string"
+        },
+        "speaker": {
+          "type": "string"
+        },
+        "quote": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

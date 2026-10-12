@@ -1,0 +1,70 @@
+{
+  "criteria": {
+    "OB01": {"expected": "FF", "approx_time": "00:00:03", "why": "Chào cả mẹ Thu và Bảo An, kiểm tra âm thanh/camera bằng ngón like, gọi đúng tên, hỏi thăm giờ ăn/giờ tan làm. [cài làm tốt]"},
+    "OB02": {"expected": "FF", "approx_time": "00:01:32", "why": "Thầy Khang giới thiệu tên, vai trò Mentor, kể chuyện run lúc thi hùng biện lớp 8 rồi giải nhì lớp 10. [cài làm tốt]"},
+    "OB03": {"expected": "FF", "approx_time": "00:02:21", "why": "Nêu 4 giá trị tôn trọng/cởi mở/tự tin/tử tế, ví dụ tôn trọng thông tin cá nhân, hỏi gia đình có thắc mắc hay phản đối không."},
+    "OB04": {"expected": "FF", "approx_time": "00:04:01", "why": "Mời cả mẹ và con, nói rõ cam kết chung ba bên, hướng dẫn ký bằng ngón like và chụp màn hình; ký sau khi đã giải thích nội quy (S01 đúng thứ tự)."},
+    "OB05": {"expected": "FF", "approx_time": "00:04:45", "why": "Nêu đủ khởi động chung, phần học riêng với con + nhiệm vụ của mẹ, phần gia đình, họp riêng với mẹ. [cài làm tốt]"},
+    "OB06": {"expected": "FF", "approx_time": "00:05:41", "why": "Giao cả mẹ và con viết 2-3 từ khoá về người kia, giải thích cách làm (30 giây), dặn gập giấy giữ lại cho phần sau. [cài đủ theo mục 6]"},
+    "OB07": {"expected": "FF", "approx_time": "00:07:40", "why": "Mẹ sang phòng khác, giới thiệu WCA, xác nhận mẹ nhận đúng link (gửi lại sau khi mẹ đọc số Zalo), giải thích mục đích, hỏi An còn thiết bị và không gian. [cài đủ theo mục 6; có SĐT hư cấu 0912 345 678 ở đây để test che số]"},
+    "OB08": {"expected": "NF", "accept": ["NF", "PF"], "approx_time": "00:09:37", "why": "Chỉ hỏi 'con khỏe không', con đáp 'khỏe ạ' rồi chuyển luôn; không xác nhận không gian riêng tư, không dùng công cụ cảm xúc, không hỏi sâu. Theo notes OB08, hỏi thăm sức khỏe chung không đủ. [LỖI CÀI 1]"},
+    "OB09": {"expected": "PF", "approx_time": "00:09:46", "why": "Có làm mẫu và mời 2 sở thích, hỏi thêm về vẽ/nhạc, không sửa sở thích; nhưng Mentor tự trả lời thay con 'chắc con thích chơi game' (F02) và hỏi sâu còn nông. [LỖI CÀI 2]"},
+    "OB10": {"expected": "FF", "approx_time": "00:11:10", "why": "Kể chuyện bản thân làm mẫu, con nói tự hào vì vẽ xong truyện tranh 12 trang, Mentor ghi nhận cụ thể sự kiên trì."},
+    "OB11": {"expected": "FF", "approx_time": "00:12:30", "why": "Hướng dẫn thiền hồ nước và viết 3 nỗi sợ; con nói chưa muốn kể, Mentor tôn trọng, chia sẻ nỗi sợ của mình và đưa cách khác (chỉ cho biết số lượng); không ép. Theo notes OB11 vẫn FF. [LỖI/TÌNH HUỐNG CÀI 3]"},
+    "OB12": {"expected": "FF", "approx_time": "00:16:53", "why": "Hướng dẫn thở, ghi nhận sự dũng cảm, nói luôn ở đây khi con cần, ngoắc tay."},
+    "OB13": {"expected": "FF", "approx_time": "00:18:17", "why": "Liên hệ lắng nghe bản thân với chăm sóc hằng ngày, ví dụ đánh răng, nêu sức mạnh của hành động nhỏ lặp lại. Phần này nằm TRƯỚC đoạn mất tiếng nên vẫn có bằng chứng."},
+    "OB14": {"expected": "NE", "approx_time": "00:19:36", "why": "Mentor dẫn nhập 'câu chuyện về một bạn học sinh' rồi khoảng 3 phút (19:36-22:35) mất tiếng, chỉ còn 2 segment '[không nghe rõ]'. Không đủ bằng chứng để chấm, không phải NF. [LỖI CÀI 4]"},
+    "OB15": {"expected": "FF", "approx_time": "00:22:35", "why": "Hỏi mục tiêu dài hạn khi 18 tuổi (họa sĩ minh họa/thiết kế nhân vật) và ngắn hạn (Toán lên 8), ghi nhận, nói cần thời gian và sự đồng hành."},
+    "OB16": {"expected": "FF", "approx_time": "00:23:45", "why": "Giải thích thân cường/trí sáng/tâm an và gắn từng phần với việc vẽ, học Toán, bớt run."},
+    "OB17": {"expected": "FF", "approx_time": "00:24:33", "why": "Hỏi con có muốn tiếp tục/cam kết 1 năm không, con trả lời rõ 'con đồng ý, muốn học tiếp', không suy đoán thay con."},
+    "OB18": {"expected": "NF", "approx_time": "00:25:00", "why": "Mentor bỏ hẳn lịch Mentor 1:1, lớp Kỹ năng sống, CLB thể chất; không kiểm tra trùng lịch, không hướng dẫn ghi thời khoá biểu; nhảy từ OB17 sang giao thử thách. [LỖI CÀI 5]"},
+    "OB19": {"expected": "FF", "approx_time": "00:25:08", "why": "Cho chọn dọn giường hoặc tập thể dục, con chọn dọn giường, bắt đầu sáng mai, báo cáo bằng ảnh qua Zalo trước 8h, phần thưởng Chiến binh Tiên phong, hỏi con sẵn sàng chưa."},
+    "OB20": {"expected": "FF", "approx_time": "00:26:05", "why": "Hỏi câu 'nếu mẹ muốn bỏ ngang con sẽ nói gì', con trả lời; cho con đọc 3 từ khoá về mẹ (hay lo, nấu ăn ngon, vui tính), Mentor nhận xét tích cực rồi chuẩn bị mời mẹ vào."},
+    "OB21": {"expected": "FF", "approx_time": "00:28:30", "why": "Chào mẹ quay lại, tóm tắt 3 nội dung đã học, nêu điểm tích cực của An, nói rõ sẽ không kể lại điều riêng tư con chia sẻ."},
+    "OB22": {"expected": "FF", "approx_time": "00:29:41", "why": "Cho An nói lại câu cam kết với mẹ, nhắc thử thách dọn giường và vai trò của mẹ, giải thích yêu cầu 3 lớp (camera, mic, không vào muộn, hậu quả) và xin cam kết."},
+    "OB23": {"expected": "FF", "approx_time": "00:32:13", "why": "Giới thiệu Chim sẻ/Đại bàng, vẫy cánh theo thứ tự con trước mẹ sau, Mentor là Bồ câu, không khí vui."},
+    "OB24": {"expected": "PF", "approx_time": "00:33:00", "why": "Có nhìn mắt 10 giây, gợi kỷ niệm, mỗi người chia sẻ về người kia và ghi nhận; nhưng Mentor KHÔNG dùng lại tờ giấy từ khoá (còn bảo 'không cần nhìn giấy') nên thiếu một yêu cầu cốt lõi. [LỖI CÀI 6a]"},
+    "OB25": {"expected": "FF", "approx_time": "00:34:41", "why": "Mời ôm/nói thầm nếu thoải mái, nói rõ có thể chỉ nắm tay, người nghe chỉ ghi nhận không tranh luận, nói rõ không cần khóc hay nói hết. [cài làm tốt]"},
+    "OB26": {"expected": "FF", "approx_time": "00:37:10", "why": "Nhớ kỷ niệm vui, mẹ và con lần lượt nói lời cảm ơn, Mentor tổng kết ý nghĩa lắng nghe."},
+    "OB27": {"expected": "FF", "approx_time": "00:38:38", "why": "Hỏi cảm xúc con (nhẹ nhõm, xúc động) và mẹ (xúc động, vui), cảm ơn, cho An rời phòng trước khi họp riêng. [cài làm tốt]"},
+    "OB28": {"expected": "FF", "approx_time": "00:40:00", "why": "Hỏi mẹ nhớ gì từ buổi khai giảng, mẹ nhớ 2 chuyện, Mentor nhắc đủ 3 câu chuyện và nối với hiểu con, gốc rễ, kiên trì."},
+    "OB29": {"expected": "PF", "approx_time": "00:46:03", "why": "Chỉ hỏi 1 câu 'vì sao chọn TeenCare' SAU khi đã nói giá; chỉ nhận 1 ý (con ít nói, muốn tự tin), không hỏi biểu hiện/thời gian/cách đã thử, không tóm tắt vấn đề. [LỖI CÀI 8]"},
+    "OB30": {"expected": "FF", "approx_time": "00:41:10", "why": "Bắt đầu từ điểm mạnh (kiên trì, ước mơ rõ), nêu điểm cần hỗ trợ (tự tin nói suy nghĩ), có bằng chứng từ buổi học, phân biệt quan sát và suy luận, nói chưa kết luận chỉ dựa 1 buổi."},
+    "OB31": {"expected": "NF", "approx_time": "00:41:10", "why": "Không xác nhận hoàn thành WCA, không hỏi mẹ nhận ra điều gì sau bài, không dùng dữ liệu WCA, không bàn thói quen/thời gian thay đổi. Mẹ chỉ làm bài ở OB07. [LỖI CÀI 6b]"},
+    "OB32": {"expected": "PF", "approx_time": "00:42:42", "why": "Giới thiệu đủ thành phần hệ sinh thái và vai trò Mentor/KNS/thể chất/công nghệ, nhưng chưa liên hệ với nhu cầu gia đình vì chưa hỏi nhu cầu (D01)."},
+    "OB33": {"expected": "FF", "approx_time": "00:43:36", "why": "Nêu điểm chung/khác biệt hai gói, tần suất 1:1, vai trò huấn luyện thói quen và lớp phụ huynh, hỏi mẹ gói nào hợp. Nội dung đủ nhưng đặt sai thứ tự (trước OB29)."},
+    "OB34": {"expected": "PF", "approx_time": "00:45:04", "why": "Nêu giá 993k/tháng, tổng 11.916.000đ, thời gian 1 năm, ưu đãi 47% có hạn 24h; chưa nói phương thức/điều kiện thanh toán rõ và không hỏi mẹ còn câu hỏi về chi phí. Đặt trước OB29 (D01). [LỖI CÀI 8]"},
+    "OB35": {"expected": "PF", "approx_time": "00:46:24", "why": "Có hỏi 'còn băn khoăn gì không' nhưng khi mẹ nói số tiền lớn/cần bàn với ba cháu thì Mentor không xác định nguyên nhân hay giải đáp mà chỉ nhắc ưu đãi 24h. [LỖI CÀI 9]"},
+    "OB36": {"expected": "NF", "accept": ["NF", "PF"], "approx_time": "00:46:59", "why": "Không hỏi rõ quyết định; mẹ lưỡng lự, Mentor tự 'đăng ký giữ suất' rồi coi 'ừm, dạ vâng' mơ hồ là đồng ý; không thống nhất bước tiếp theo theo mong muốn của mẹ. Suy diễn đồng ý. [LỖI CÀI 9]"},
+    "OB37": {"expected": "FF", "approx_time": "00:47:23", "why": "Nhắc thử thách dọn giường, việc cụ thể tuần này (nhắc con dọn, chụp ảnh gửi Zalo trước 8h, mẹ cùng dọn), cấp tài khoản app và hướng dẫn, kênh Zalo, cảm ơn và kết thúc. Lịch học chỉ hứa gửi qua Zalo. [cài làm tốt]"}
+  },
+  "links": {
+    "LK01": "CHUA_DAT",
+    "LK02": "DAT",
+    "LK03": "DAT",
+    "LK04": "CHUA_DAT",
+    "LK05": "CHUA_DAT",
+    "LK06": "CHUA_DAT"
+  },
+  "link_notes": {
+    "LK01": "Từ khoá viết ở hoạt động 2 (OB06) nhưng không được dùng lại ở Chim sẻ gọi Đại bàng (OB24); Mentor còn bảo con không cần nhìn giấy.",
+    "LK02": "Quan sát ở phần học cùng con (rụt rè, kiên trì, vẽ, chưa muốn kể nỗi sợ) được dùng làm bằng chứng ở nhận định sư phạm OB30.",
+    "LK03": "Mục tiêu họa sĩ/Toán 8 được nối với Thân-Tâm-Trí (OB16) và thử thách dọn giường (OB19). Phần lịch học bị bỏ nhưng thử thách vẫn nối được.",
+    "LK04": "Mẹ làm WCA nhưng Mentor không hỏi kết quả hay dùng dữ liệu ở hoạt động 5 (OB31 NF).",
+    "LK05": "Giải pháp gói Huấn luyện được giới thiệu như tính năng và giá, không giải thích vì sao phù hợp với khó khăn thực của nhà Thu vì chưa khai thác nhu cầu.",
+    "LK06": "Không có lịch học 3 lớp (OB18 NF), mẹ chưa đồng ý rõ; chỉ có thử thách dọn giường còn thiếu lịch và bước tiếp theo thống nhất."
+  },
+  "flags": [
+    {"id": "F02", "approx_time": "00:10:24", "script_instructed": false, "why": "Mentor hỏi sở thích rồi tự trả lời thay An: 'Chắc con thích chơi game đúng không? Mấy bạn tuổi này ai cũng vậy hết.' [LỖI CÀI 2]"},
+    {"id": "F07", "approx_time": "00:43:36", "script_instructed": false, "why": "Mentor chuyển sang giới thiệu mô hình, so sánh gói và giá (OB32-OB34, 42:42-46:03) khi chưa hỏi nhu cầu và lý do chọn TeenCare (OB29 chỉ hỏi sau đó). [LỖI CÀI 8]"},
+    {"id": "F09", "approx_time": "00:46:41", "script_instructed": true, "why": "'Ưu đãi này chỉ trong 24 giờ, mẹ quyết luôn hôm nay giúp thầy nhé.' Cụm '24 giờ' có trong kịch bản gốc (mục so sánh sản phẩm) nên script_instructed = true. [LỖI CÀI 9]"},
+    {"id": "F09", "approx_time": "00:46:59", "script_instructed": false, "why": "Mẹ đang lưỡng lự ('để chị bàn với ba cháu đã') thì Mentor nói 'vậy thầy đăng ký giữ suất cho mình luôn nha' rồi ghi nhận mẹ đồng ý dù mẹ chỉ nói 'ừm, dạ vâng'. Câu này không có trong kịch bản. [LỖI CÀI 9]"}
+  ],
+  "sequence": [
+    {"rule_id": "D01", "severity": "high", "why": "OB32 (42:42), OB33 (43:36), OB34 (45:04) xảy ra trước OB29 (46:03): giới thiệu mô hình, so sánh gói và nói giá trước khi hỏi lý do chọn TeenCare và kỳ vọng. Đi kèm cờ F07."}
+  ],
+  "no_violation": ["D02", "D03", "D04", "D05", "S01", "S02", "S03", "S04", "S05"],
+  "no_violation_notes": "D02: từ khoá giao ở 05:41 trước hoạt động 4 (dù không được dùng lại - xử lý ở LK01). D03: WCA giao ở 07:40 trước OB31. D04: An rời buổi ở 39:02 trước OB28. D05: hỏi băn khoăn (OB35) trước OB36, nhưng xử lý kém nên chấm PF/NF. S03: OB18 bị bỏ nhưng không đảo thứ tự các bước còn lại. S05: OB29 bị đặt sau OB32-34 chỉ tính là D01; các cặp OB30/OB31 được phép đổi chỗ.",
+  "pii_test": "Số điện thoại hư cấu '0912 345 678' xuất hiện 2 lần ở ~00:08:01 và 00:08:10 (mẹ đọc số Zalo, Mentor đọc lại) để kiểm tra che số.",
+  "planted_notes": "Tình huống cài sẵn: (1) OB08 chỉ hỏi 'con khỏe không' -> NF/PF; (2) OB09 Mentor tự trả lời thay con -> F02; (3) OB11 con chưa sẵn sàng, Mentor tôn trọng -> FF; (4) khoảng 19:36-22:35 mất tiếng, chỉ có 2 segment '[không nghe rõ]' -> OB14 = NE (không phải NF); (5) OB18 bỏ hẳn lịch 3 lớp -> NF; (6) từ khoá và WCA được giao (OB06, OB07 FF) nhưng không dùng lại ở OB24 (LK01 CHUA_DAT) và không hỏi kết quả WCA ở OB31 (NF, LK04 CHUA_DAT); (7) An rời buổi đúng lúc, D04 đạt, OB27 và OB25 FF; (8) OB33/OB34 trước OB29 -> D01 high + F07; (9) F09 '24 giờ' (script_instructed true) và 'đăng ký giữ suất' khi mẹ lưỡng lự (script_instructed false), OB35 PF, OB36 NF/PF; (10) làm tốt: OB01, OB02, OB05, OB37 FF; (11) số điện thoại hư cấu 0912 345 678. Các mã còn lại tự chấm theo nội dung đã viết. Mốc giờ tính từ transcript.json (giây từ đầu buổi); sai số vài giây. Giả định chấm: coi các tiêu chí liên quan lịch ở OB37 là FF theo yêu cầu cài đặt, dù Mentor chỉ hứa gửi lịch qua Zalo."
+}

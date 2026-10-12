@@ -1,0 +1,803 @@
+{
+  "source": "Onboarding Evaluation_AI Brief (PDC, đọc 09/10/2026)",
+  "activities": [
+    {
+      "id": 1,
+      "name": "Chào hỏi, giới thiệu và thiết lập cam kết",
+      "duration": "5 phút",
+      "weight": 10,
+      "goal": "Tạo ấn tượng đầu tiên chuyên nghiệp, xây dựng sự tin tưởng với gia đình và thiết lập một môi trường học tập có nguyên tắc.",
+      "errors": [
+        "Bỏ qua phần giới thiệu bản thân.",
+        "Không giải thích nội quy mà yêu cầu gia đình ký ngay.",
+        "Không xác nhận cam kết của con.",
+        "Không giải thích việc học riêng của phụ huynh và học sinh.",
+        "Dành quá nhiều thời gian small talk khiến các nội dung chính bị cắt giảm."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Khởi động và giao nhiệm vụ",
+      "duration": "2 phút",
+      "weight": 10,
+      "goal": "Tạo bước tương tác đầu tiên giữa phụ huynh và học sinh, đồng thời chuẩn bị dữ liệu cho hoạt động \"Chim sẻ gọi Đại bàng\" ở phần sau.",
+      "logic": [
+        "Hai phần này phải kết nối với các hoạt động sau:",
+        "Từ khóa được sử dụng trong \"Chim sẻ gọi Đại bàng\".",
+        "Kết quả WCA được tham chiếu khi trao đổi riêng với phụ huynh.",
+        "AI phải phát hiện tình huống Mentor giao nhiệm vụ nhưng không sử dụng lại kết quả."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Học riêng cùng con",
+      "duration": "20 phút",
+      "weight": 35,
+      "goal": "Giúp học sinh lắng nghe bản thân, hiểu vai trò của thói quen, xác định mục tiêu cá nhân, xây dựng niềm tin với Mentor và lựa chọn hành động học tập tiếp theo."
+    },
+    {
+      "id": 4,
+      "name": "Học cùng gia đình",
+      "duration": "10 phút",
+      "weight": 20,
+      "goal": "Tạo kết nối cảm xúc giữa phụ huynh và con, củng cố những nội dung học tập, xây dựng sự đồng hành của gia đình."
+    },
+    {
+      "id": 5,
+      "name": "Trao đổi riêng với phụ huynh",
+      "duration": "20–25 phút, cần thống nhất lại",
+      "weight": 25,
+      "goal": "Hiểu rõ kỳ vọng và những khó khăn của gia đình, đưa ra nhận định sư phạm có cơ sở, giúp phụ huynh hiểu phương pháp TeenCare, xác định giải pháp phù hợp và thống nhất bước tiếp theo."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "OB01",
+      "name": "Chào hỏi và thiết lập kết nối",
+      "activity": 1,
+      "phase": null,
+      "requirements": [
+        "Chào cả phụ huynh và học sinh.",
+        "Xác nhận âm thanh, hình ảnh và điều kiện tương tác.",
+        "Gọi đúng tên người tham gia.",
+        "Có lời hỏi thăm hoặc small talk phù hợp để tạo không khí thân thiện."
+      ],
+      "evidence": "Gia đình được chào đón, Mentor tạo được tương tác hai chiều thay vì chỉ đọc lời giới thiệu.",
+      "notes": []
+    },
+    {
+      "id": "OB02",
+      "name": "Giới thiệu Mentor và xây dựng sự tin tưởng",
+      "activity": 1,
+      "phase": null,
+      "requirements": [
+        "Giới thiệu tên, vai trò.",
+        "Chia sẻ một thông tin cá nhân hoặc kinh nghiệm phù hợp nhằm tạo kết nối và thể hiện năng lực.",
+        "Thể hiện tác phong của nhà giáo dục."
+      ],
+      "evidence": "Phụ huynh và học sinh biết Mentor là ai và hiểu vai trò của Mentor trong hành trình học.",
+      "notes": []
+    },
+    {
+      "id": "OB03",
+      "name": "Giới thiệu giá trị và nội quy TeenCare",
+      "activity": 1,
+      "phase": null,
+      "requirements": [
+        "Giới thiệu các giá trị tôn trọng, cởi mở, tự tin, tử tế.",
+        "Giải thích những nguyên tắc tương tác, đặc biệt là việc tôn trọng thông tin cá nhân.",
+        "Cho gia đình cơ hội đặt câu hỏi hoặc trao đổi về nội quy."
+      ],
+      "evidence": "Gia đình được giải thích nội quy và thể hiện sự hiểu biết hoặc đồng thuận.",
+      "notes": []
+    },
+    {
+      "id": "OB04",
+      "name": "Xác nhận cam kết học tập",
+      "activity": 1,
+      "phase": null,
+      "requirements": [
+        "Mời cả phụ huynh và học sinh tham gia xác nhận cam kết.",
+        "Thể hiện đây là cam kết chung giữa gia đình và Mentor.",
+        "Thực hiện hoặc hướng dẫn quy trình ký/xác nhận."
+      ],
+      "evidence": "Có lời xác nhận rõ ràng từ các bên hoặc bằng chứng ký cam kết.",
+      "notes": []
+    },
+    {
+      "id": "OB05",
+      "name": "Giới thiệu lịch trình buổi học",
+      "activity": 1,
+      "phase": null,
+      "requirements": [
+        "Giới thiệu phần khởi động chung.",
+        "Thông báo phần học riêng với con và nhiệm vụ dành cho phụ huynh.",
+        "Giới thiệu phần hoạt động gia đình.",
+        "Thông báo phần trao đổi riêng với phụ huynh."
+      ],
+      "evidence": "Gia đình biết các hoạt động sắp diễn ra và cách tham gia.",
+      "notes": []
+    },
+    {
+      "id": "OB06",
+      "name": "Thực hiện thử thách 2–3 từ khóa",
+      "activity": 2,
+      "phase": null,
+      "requirements": [
+        "Yêu cầu phụ huynh viết 2–3 từ mô tả con.",
+        "Yêu cầu con viết 2–3 từ mô tả phụ huynh.",
+        "Giải thích cách thực hiện.",
+        "Yêu cầu giữ lại câu trả lời cho phần hoạt động chung."
+      ],
+      "evidence": "Cả hai được giao nhiệm vụ và có dấu hiệu hoàn thành việc ghi từ khóa.",
+      "notes": []
+    },
+    {
+      "id": "OB07",
+      "name": "Giao nhiệm vụ riêng cho phụ huynh",
+      "activity": 2,
+      "phase": null,
+      "requirements": [
+        "Hướng dẫn phụ huynh chuyển sang không gian khác.",
+        "Giới thiệu bài đánh giá Whole Child Assessment (WCA).",
+        "Xác nhận phụ huynh đã nhận đúng đường dẫn.",
+        "Giải thích mục đích bài đánh giá.",
+        "Xác nhận con vẫn có thiết bị và không gian phù hợp để tiếp tục học riêng."
+      ],
+      "evidence": "Phụ huynh xác nhận nhận được bài đánh giá và biết nhiệm vụ cần thực hiện.",
+      "notes": []
+    },
+    {
+      "id": "OB08",
+      "name": "Xác nhận không gian riêng tư và cảm xúc của con",
+      "activity": 3,
+      "phase": "A – Check-in cảm xúc",
+      "requirements": [
+        "Xác nhận con đã sẵn sàng học riêng.",
+        "Sử dụng câu hỏi hoặc công cụ check-in cảm xúc.",
+        "Mời con xác định những cảm xúc hiện tại.",
+        "Tìm hiểu thêm nguyên nhân hoặc bối cảnh của ít nhất một cảm xúc được chia sẻ.",
+        "Ghi nhận cảm xúc mà không phán xét."
+      ],
+      "evidence": "Con có cơ hội gọi tên cảm xúc và Mentor phản hồi phù hợp.",
+      "notes": [
+        "Chỉ hỏi thăm sức khỏe chung không đủ để hoàn thành tiêu chí này."
+      ]
+    },
+    {
+      "id": "OB09",
+      "name": "Khám phá sở thích cá nhân",
+      "activity": 3,
+      "phase": "B – Lắng nghe chính mình",
+      "requirements": [
+        "Chia sẻ hoặc làm mẫu cách giới thiệu sở thích.",
+        "Mời học sinh chia sẻ tối thiểu 2 sở thích.",
+        "Hỏi thêm để hiểu điều con yêu thích.",
+        "Không phán xét hoặc sửa đổi sở thích của con."
+      ],
+      "evidence": "Có thông tin cụ thể về sở thích của con và phản hồi ghi nhận từ Mentor.",
+      "notes": []
+    },
+    {
+      "id": "OB10",
+      "name": "Khám phá niềm tự hào về bản thân",
+      "activity": 3,
+      "phase": "B – Lắng nghe chính mình",
+      "requirements": [
+        "Hướng dẫn con nhìn lại một điều bản thân tự hào.",
+        "Có thể dùng câu chuyện bản thân làm mẫu.",
+        "Khuyến khích con chia sẻ những điểm tốt hoặc tiến bộ.",
+        "Ghi nhận cụ thể phẩm chất/nỗ lực của con."
+      ],
+      "evidence": "Con được khuyến khích nhìn nhận điểm mạnh và giá trị bản thân.",
+      "notes": []
+    },
+    {
+      "id": "OB11",
+      "name": "Khám phá nỗi sợ, nỗi buồn hoặc những điều khó chia sẻ",
+      "activity": 3,
+      "phase": "B – Lắng nghe chính mình",
+      "requirements": [
+        "Tạo một hoạt động suy ngẫm về những điều khiến con lo lắng hoặc sợ hãi.",
+        "Hướng dẫn con nhận diện cảm xúc và nguyên nhân.",
+        "Khuyến khích con chia sẻ trong phạm vi con cảm thấy an toàn.",
+        "Lắng nghe, ghi nhận và phản hồi có sự đồng cảm.",
+        "Không ép buộc con tiết lộ thông tin nhạy cảm."
+      ],
+      "evidence": "Mentor đã tạo cơ hội và môi trường an toàn để con nhận diện, chia sẻ cảm xúc.",
+      "notes": [
+        "Nếu con chưa sẵn sàng nói về nỗi sợ, Mentor vẫn có thể được đánh giá hoàn thành khi tôn trọng quyết định của con và sử dụng cách tiếp cận phù hợp khác."
+      ]
+    },
+    {
+      "id": "OB12",
+      "name": "Củng cố thông điệp lắng nghe và tin tưởng bản thân",
+      "activity": 3,
+      "phase": "B – Lắng nghe chính mình",
+      "requirements": [
+        "Tổng kết ý nghĩa của việc lắng nghe chính mình.",
+        "Ghi nhận sự dũng cảm và nỗ lực của con.",
+        "Khuyến khích con tìm kiếm sự hỗ trợ khi cần.",
+        "Khẳng định vai trò đồng hành của Mentor."
+      ],
+      "evidence": "Con được truyền đạt thông điệp về tự nhận thức, sự an toàn và khả năng được hỗ trợ.",
+      "notes": []
+    },
+    {
+      "id": "OB13",
+      "name": "Giải thích sức mạnh của thói quen",
+      "activity": 3,
+      "phase": "C – Xây dựng thói quen",
+      "requirements": [
+        "Liên hệ việc lắng nghe bản thân với chăm sóc bản thân hằng ngày.",
+        "Sử dụng ít nhất một ví dụ gần gũi về thói quen.",
+        "Giải thích mối liên hệ giữa hành động nhỏ lặp lại và kết quả dài hạn."
+      ],
+      "evidence": "Mentor truyền tải được thông điệp về sự tích lũy của những hành động nhỏ.",
+      "notes": []
+    },
+    {
+      "id": "OB14",
+      "name": "Sử dụng câu chuyện minh họa",
+      "activity": 3,
+      "phase": "C – Xây dựng thói quen",
+      "requirements": [
+        "Kể ít nhất một câu chuyện hoặc ví dụ về việc hình thành thói quen.",
+        "Kết nối ví dụ với hoàn cảnh, sở thích hoặc mục tiêu của con.",
+        "Giải thích bài học rút ra."
+      ],
+      "evidence": "Ví dụ không chỉ được kể mà còn được liên hệ với hành trình của con.",
+      "notes": [
+        "Không bắt buộc sử dụng nguyên văn những nhân vật trong script nếu Mentor có ví dụ khác phù hợp và xác thực."
+      ]
+    },
+    {
+      "id": "OB15",
+      "name": "Xác định mục tiêu cá nhân",
+      "activity": 3,
+      "phase": "C – Xây dựng thói quen",
+      "requirements": [
+        "Hỏi con về mục tiêu dài hạn, chẳng hạn điều con mong muốn khi 18 tuổi.",
+        "Hỏi về mục tiêu ngắn hạn.",
+        "Ghi nhận nguyện vọng.",
+        "Giúp con nhận ra việc đạt mục tiêu cần thời gian, sự rèn luyện và hỗ trợ."
+      ],
+      "evidence": "Có ít nhất một mục tiêu được học sinh chia sẻ và được Mentor phản hồi.",
+      "notes": []
+    },
+    {
+      "id": "OB16",
+      "name": "Kết nối với định hướng Thân – Tâm – Trí",
+      "activity": 3,
+      "phase": "C – Xây dựng thói quen",
+      "requirements": [
+        "Giải thích định hướng phát triển toàn diện tại TeenCare.",
+        "Liên hệ thể chất khỏe mạnh, tâm hồn bình an và trí tuệ với những mục tiêu của con.",
+        "Đảm bảo nội dung được diễn đạt dễ hiểu theo lứa tuổi."
+      ],
+      "evidence": "Con được giới thiệu về định hướng phát triển toàn diện và mối liên hệ với nhu cầu bản thân.",
+      "notes": []
+    },
+    {
+      "id": "OB17",
+      "name": "Xây dựng sự sẵn sàng tham gia học tập",
+      "activity": 3,
+      "phase": "D – Hành động và lịch học",
+      "requirements": [
+        "Hỏi con về mong muốn tiếp tục tham gia.",
+        "Giúp con hiểu những hoạt động sắp tới",
+        "Khuyến khích con thể hiện sự chủ động.",
+        "Không thay thế câu trả lời của con bằng suy đoán của Mentor."
+      ],
+      "evidence": "Có phản hồi rõ ràng từ con về mức độ sẵn sàng.",
+      "notes": []
+    },
+    {
+      "id": "OB18",
+      "name": "Thống nhất lịch học ba lớp",
+      "activity": 3,
+      "phase": "D – Hành động và lịch học",
+      "requirements": [
+        "Giới thiệu lịch Mentor 1:1.",
+        "Giới thiệu lịch Kỹ năng sống.",
+        "Giới thiệu lịch Thể chất.",
+        "Kiểm tra lịch có phù hợp và trùng với hoạt động khác không.",
+        "Hướng dẫn con ghi lại thời khóa biểu."
+      ],
+      "evidence": "Có lịch dự kiến hoặc xác nhận lịch cho cả ba nhóm hoạt động.",
+      "notes": []
+    },
+    {
+      "id": "OB19",
+      "name": "Giao thử thách hình thành thói quen",
+      "activity": 3,
+      "phase": "D – Hành động và lịch học",
+      "requirements": [
+        "Giới thiệu thử thách cụ thể cho giai đoạn đầu.",
+        "Cho con lựa chọn hoạt động phù hợp, như dọn giường hoặc tập thể dục.",
+        "Xác định khi nào thực hiện.",
+        "Hướng dẫn cách báo cáo kết quả.",
+        "Ghi nhận sự sẵn sàng của con."
+      ],
+      "evidence": "Con lựa chọn một thử thách cụ thể và hiểu hành động tiếp theo.",
+      "notes": []
+    },
+    {
+      "id": "OB20",
+      "name": "Chuẩn bị chuyển tiếp sang phần gia đình",
+      "activity": 3,
+      "phase": "D – Hành động và lịch học",
+      "requirements": [
+        "Nhắc lại ý nghĩa của sự kiên trì và đồng hành.",
+        "Khuyến khích con chia sẻ suy nghĩ về việc tiếp tục học khi gặp khó khăn.",
+        "Xem lại các từ khóa con đã viết về phụ huynh.",
+        "Chuẩn bị không khí phù hợp trước khi mời phụ huynh quay lại."
+      ],
+      "evidence": "Mentor đã chuẩn bị nội dung và cảm xúc để chuyển sang hoạt động gia đình.",
+      "notes": []
+    },
+    {
+      "id": "OB21",
+      "name": "Tóm tắt kết quả buổi học riêng",
+      "activity": 4,
+      "phase": "A – Kết nối lại và tổng kết",
+      "requirements": [
+        "Chào đón phụ huynh quay lại.",
+        "Tóm tắt các nội dung con đã học: lắng nghe bản thân, thói quen và mục tiêu cá nhân.",
+        "Chia sẻ những điểm tích cực quan sát được ở con.",
+        "Tôn trọng thông tin riêng tư con đã chia sẻ."
+      ],
+      "evidence": "Phụ huynh nhận được thông tin mang tính giáo dục và ghi nhận về buổi học của con.",
+      "notes": [
+        "Không tiết lộ các nội dung riêng tư của con khi chưa có sự đồng ý, trừ trường hợp cần xử lý theo quy trình bảo vệ an toàn của trẻ."
+      ]
+    },
+    {
+      "id": "OB22",
+      "name": "Củng cố tinh thần đồng hành và nội quy",
+      "activity": 4,
+      "phase": "A – Kết nối lại và tổng kết",
+      "requirements": [
+        "Nhắc lại ý nghĩa của việc kiên trì.",
+        "Mời cả phụ huynh và con thể hiện quan điểm về hành trình học.",
+        "Nhắc lại thử thách của con và cách phụ huynh hỗ trợ.",
+        "Giải thích những yêu cầu tham gia các lớp học."
+      ],
+      "evidence": "Gia đình hiểu trách nhiệm của từng bên và có cơ hội trao đổi về khả năng thực hiện.",
+      "notes": []
+    },
+    {
+      "id": "OB23",
+      "name": "Giới thiệu vai trò và tạo không khí",
+      "activity": 4,
+      "phase": "B – Chim sẻ gọi Đại bàng",
+      "requirements": [
+        "Giới thiệu con là \"Chim sẻ\" và phụ huynh là \"Đại bàng\".",
+        "Giải thích hoạt động.",
+        "Hướng dẫn tương tác khởi động.",
+        "Tạo không khí ấm áp, cởi mở."
+      ],
+      "evidence": "Cả hai hiểu vai trò và sẵn sàng tham gia.",
+      "notes": []
+    },
+    {
+      "id": "OB24",
+      "name": "Hoạt động nhìn lại ký ức và chia sẻ từ khóa",
+      "activity": 4,
+      "phase": "B – Chim sẻ gọi Đại bàng",
+      "requirements": [
+        "Mời hai người dành thời gian chú ý đến nhau.",
+        "Gợi nhớ những kỷ niệm chung.",
+        "Sử dụng lại các từ khóa đã viết ở hoạt động khởi động.",
+        "Tạo cơ hội để mỗi người chia sẻ về người còn lại.",
+        "Khuyến khích phản hồi bằng sự ghi nhận."
+      ],
+      "evidence": "Cả phụ huynh và con có lượt chia sẻ và lắng nghe.",
+      "notes": []
+    },
+    {
+      "id": "OB25",
+      "name": "Hoạt động chia sẻ cảm xúc khó nói",
+      "activity": 4,
+      "phase": "B – Chim sẻ gọi Đại bàng",
+      "requirements": [
+        "Hướng dẫn hai người nhớ lại những thời điểm khó khăn hoặc cảm xúc chưa được nói ra.",
+        "Mời mỗi người chia sẻ nếu cảm thấy thoải mái.",
+        "Khuyến khích người nghe ghi nhận thay vì tranh luận, phòng thủ hoặc phán xét.",
+        "Tôn trọng quyền từ chối các tương tác thân thể hoặc chia sẻ riêng tư."
+      ],
+      "evidence": "Hoạt động tạo cơ hội cho sự thấu hiểu và lắng nghe hai chiều.",
+      "notes": [
+        "Không yêu cầu phải có khóc, ôm hoặc tiết lộ bí mật mới được coi là thành công."
+      ]
+    },
+    {
+      "id": "OB26",
+      "name": "Hoạt động ghi nhận và cảm ơn",
+      "activity": 4,
+      "phase": "B – Chim sẻ gọi Đại bàng",
+      "requirements": [
+        "Hướng dẫn hai người nhớ lại những kỷ niệm tích cực.",
+        "Mời phụ huynh gửi lời cảm ơn tới con.",
+        "Mời con gửi lời cảm ơn tới phụ huynh.",
+        "Tổng kết ý nghĩa của việc lắng nghe và ghi nhận."
+      ],
+      "evidence": "Mỗi bên có cơ hội thể hiện sự biết ơn hoặc ghi nhận.",
+      "notes": []
+    },
+    {
+      "id": "OB27",
+      "name": "Check-out cảm xúc và kết thúc hoạt động",
+      "activity": 4,
+      "phase": "B – Chim sẻ gọi Đại bàng",
+      "requirements": [
+        "Hỏi cảm xúc của con sau hoạt động.",
+        "Hỏi cảm xúc của phụ huynh.",
+        "Ghi nhận phản hồi của cả hai.",
+        "Kết thúc phần gia đình bằng sự tôn trọng và cảm ơn.",
+        "Hướng dẫn con rời buổi học trước khi bắt đầu trao đổi riêng."
+      ],
+      "evidence": "Mentor thực hiện check-out cảm xúc và chuyển tiếp phù hợp.",
+      "notes": []
+    },
+    {
+      "id": "OB28",
+      "name": "Nhắc lại nội dung buổi khai giảng",
+      "activity": 5,
+      "phase": "A – Tái kết nối triết lý giáo dục",
+      "requirements": [
+        "Hỏi phụ huynh về trải nghiệm tại buổi khai giảng.",
+        "Xác định phụ huynh đã tham gia hoặc nhớ những nội dung nào.",
+        "Kết nối với các triết lý giáo dục được đề cập trong script:",
+        "Hiểu con trước khi lựa chọn cách tiếp cận.",
+        "Giải quyết nguyên nhân gốc thay vì chỉ tập trung vào biểu hiện.",
+        "Thay đổi bền vững cần sự thực hành và kiên trì."
+      ],
+      "evidence": "Mentor giải thích được các triết lý trên bằng ví dụ hoặc cách diễn đạt phù hợp.",
+      "notes": []
+    },
+    {
+      "id": "OB29",
+      "name": "Khai thác lý do gia đình lựa chọn TeenCare",
+      "activity": 5,
+      "phase": "B – Khai thác kỳ vọng và đánh giá con",
+      "requirements": [
+        "Hỏi phụ huynh vì sao lựa chọn TeenCare.",
+        "Tìm hiểu kỳ vọng của gia đình.",
+        "Khai thác những khó khăn, biểu hiện và thời gian xuất hiện.",
+        "Tìm hiểu những phương pháp gia đình từng thử.",
+        "Lắng nghe và tóm tắt lại các vấn đề chính."
+      ],
+      "evidence": "Có thông tin về nhu cầu của gia đình và Mentor có phản hồi thể hiện sự thấu hiểu.",
+      "notes": []
+    },
+    {
+      "id": "OB30",
+      "name": "Đưa ra nhận định sư phạm về học sinh",
+      "activity": 5,
+      "phase": "B – Khai thác kỳ vọng và đánh giá con",
+      "requirements": [
+        "Bắt đầu từ những điểm mạnh hoặc tiến bộ quan sát được.",
+        "Nêu những điểm con cần được hỗ trợ.",
+        "Sử dụng bằng chứng cụ thể từ hoạt động thực tế hoặc thông tin phụ huynh đã chia sẻ.",
+        "Phân biệt quan sát với suy luận.",
+        "Giải thích ý nghĩa giáo dục và những hướng hỗ trợ phù hợp."
+      ],
+      "evidence": "Nhận định có cấu trúc gồm điểm mạnh, điều cần phát triển, bằng chứng và hướng hỗ trợ.",
+      "notes": [
+        "Không coi các kết luận về tính cách, năng lực hoặc tình trạng tâm lý là chắc chắn chỉ dựa trên một buổi gặp."
+      ]
+    },
+    {
+      "id": "OB31",
+      "name": "Khai thác kết quả WCA và nhu cầu xây dựng thói quen",
+      "activity": 5,
+      "phase": "B – Khai thác kỳ vọng và đánh giá con",
+      "requirements": [
+        "Xác nhận tình trạng hoàn thành WCA.",
+        "Nếu có kết quả, sử dụng dữ liệu phù hợp để trao đổi.",
+        "Hỏi phụ huynh về điều đã nhận ra sau khi làm bài.",
+        "Thảo luận về mục tiêu thay đổi hành vi, thói quen và thời gian cần thiết.",
+        "Tìm hiểu sự khác biệt giữa kỳ vọng và tình trạng hiện tại."
+      ],
+      "evidence": "Dữ liệu WCA hoặc thông tin thay thế được sử dụng để hỗ trợ trao đổi về nhu cầu thực tế.",
+      "notes": []
+    },
+    {
+      "id": "OB32",
+      "name": "Giới thiệu mô hình TeenCare",
+      "activity": 5,
+      "phase": "C – Giới thiệu giải pháp giáo dục",
+      "requirements": [
+        "Giới thiệu các thành phần liên quan trong hệ sinh thái.",
+        "Giải thích vai trò của Mentor 1:1, lớp Kỹ năng sống, hoạt động Thể chất và công nghệ giáo dục.",
+        "Liên hệ giải pháp với nhu cầu đã xác định."
+      ],
+      "evidence": "Phụ huynh hiểu các thành phần của chương trình và vai trò của chúng.",
+      "notes": []
+    },
+    {
+      "id": "OB33",
+      "name": "So sánh các chương trình Học tập và Huấn luyện",
+      "activity": 5,
+      "phase": "C – Giới thiệu giải pháp giáo dục",
+      "requirements": [
+        "Giải thích điểm chung giữa các chương trình.",
+        "Làm rõ khác biệt về mục tiêu đầu ra.",
+        "So sánh tần suất Mentor 1:1 và nội dung học tập.",
+        "Giải thích vai trò huấn luyện thói quen và sự đồng hành của phụ huynh.",
+        "Hỏi phụ huynh chương trình nào phù hợp với nhu cầu gia đình."
+      ],
+      "evidence": "Phụ huynh được cung cấp đủ thông tin để cân nhắc lựa chọn.",
+      "notes": []
+    },
+    {
+      "id": "OB34",
+      "name": "Giải thích chi phí và điều kiện đăng ký",
+      "activity": 5,
+      "phase": "C – Giới thiệu giải pháp giáo dục",
+      "requirements": [
+        "Nêu giá và quyền lợi theo chính sách hiện hành.",
+        "Giải thích thời gian chương trình.",
+        "Làm rõ tổng số tiền, phương thức thanh toán và các điều kiện liên quan.",
+        "Giải thích ưu đãi khi thực sự áp dụng.",
+        "Kiểm tra xem phụ huynh còn câu hỏi nào không."
+      ],
+      "evidence": "Phụ huynh được thông tin rõ ràng, đầy đủ, không gây hiểu nhầm về nghĩa vụ thanh toán.",
+      "notes": []
+    },
+    {
+      "id": "OB35",
+      "name": "Lắng nghe và giải quyết băn khoăn",
+      "activity": 5,
+      "phase": "D – Xử lý băn khoăn và thống nhất bước tiếp theo",
+      "requirements": [
+        "Hỏi phụ huynh có băn khoăn nào chưa được giải đáp.",
+        "Xác định đúng nguyên nhân băn khoăn: hiệu quả, thời gian, khả năng tham gia của con, tài chính hoặc lý do khác.",
+        "Phản hồi bằng thông tin chính xác và liên hệ với nhu cầu gia đình.",
+        "Không tự giả định phụ huynh đã đồng ý.",
+        "Tôn trọng quyền cân nhắc và quyết định."
+      ],
+      "evidence": "Mentor lắng nghe đúng băn khoăn và đưa ra phản hồi phù hợp.",
+      "notes": []
+    },
+    {
+      "id": "OB36",
+      "name": "Xác nhận lựa chọn và bước tiếp theo",
+      "activity": 5,
+      "phase": "D – Xử lý băn khoăn và thống nhất bước tiếp theo",
+      "requirements": [
+        "Hỏi rõ quyết định hoặc mong muốn tiếp theo của phụ huynh.",
+        "Nếu đồng ý đăng ký, giải thích các thủ tục cần thực hiện.",
+        "Nếu chưa quyết định, thống nhất bước tiếp theo nếu phụ huynh mong muốn.",
+        "Tóm tắt các nội dung đã thống nhất."
+      ],
+      "evidence": "Có kết luận rõ ràng về trạng thái và hành động tiếp theo, không suy đoán sự đồng ý.",
+      "notes": []
+    },
+    {
+      "id": "OB37",
+      "name": "Hướng dẫn phụ huynh đồng hành cùng con",
+      "activity": 5,
+      "phase": "D – Xử lý băn khoăn và thống nhất bước tiếp theo",
+      "requirements": [
+        "Nhắc lại thử thách đã giao cho con.",
+        "Giải thích cách phụ huynh hỗ trợ.",
+        "Hướng dẫn sử dụng ứng dụng hoặc các tài nguyên liên quan nếu phù hợp.",
+        "Nhắc lại lịch học và kênh liên lạc.",
+        "Cảm ơn và kết thúc buổi gặp chuyên nghiệp."
+      ],
+      "evidence": "Phụ huynh biết những việc cần làm sau onboarding.",
+      "notes": []
+    }
+  ],
+  "links": [
+    {
+      "id": "LK01",
+      "name": "Từ khóa đầu buổi → Chim sẻ gọi Đại bàng",
+      "rule": "Thông tin viết ở hoạt động khởi động phải được sử dụng lại trong hoạt động gia đình."
+    },
+    {
+      "id": "LK02",
+      "name": "Check-in và khám phá bản thân → Nhận định sư phạm",
+      "rule": "Các quan sát thực tế trong phần học cùng con phải được sử dụng để đưa ra nhận định có căn cứ về điểm mạnh và nhu cầu hỗ trợ."
+    },
+    {
+      "id": "LK03",
+      "name": "Mục tiêu của con → Thói quen và lịch học",
+      "rule": "Những mục tiêu con chia sẻ phải được kết nối với định hướng học tập và các thử thách hành động phù hợp."
+    },
+    {
+      "id": "LK04",
+      "name": "WCA → Phân tích nhu cầu gia đình",
+      "rule": "Dữ liệu WCA, nếu có, cần được sử dụng để làm rõ những điểm phụ huynh đang quan tâm, không chỉ được đề cập như một thủ tục."
+    },
+    {
+      "id": "LK05",
+      "name": "Khó khăn của gia đình → Giải pháp được tư vấn",
+      "rule": "Mentor phải giải thích được vì sao giải pháp đề xuất phù hợp với nhu cầu thực tế, không chỉ giới thiệu các tính năng hay quyền lợi."
+    },
+    {
+      "id": "LK06",
+      "name": "Cam kết và lịch học → Hành động sau buổi onboarding",
+      "rule": "Các thông tin đã thống nhất phải được chuyển thành lịch học, thử thách và bước tiếp theo rõ ràng. ---"
+    }
+  ],
+  "flags": [
+    {
+      "id": "F01",
+      "name": "Mentor độc thoại quá nhiều, ít tạo cơ hội để phụ huynh hoặc con tham gia."
+    },
+    {
+      "id": "F02",
+      "name": "Mentor đặt câu hỏi nhưng không chờ phản hồi hoặc tự trả lời thay."
+    },
+    {
+      "id": "F03",
+      "name": "Mentor bỏ qua, phủ định hoặc đánh giá tiêu cực về cảm xúc của học sinh."
+    },
+    {
+      "id": "F04",
+      "name": "Mentor đưa ra nhận định sư phạm thiếu bằng chứng."
+    },
+    {
+      "id": "F05",
+      "name": "Mentor tiết lộ nội dung riêng tư của con không phù hợp."
+    },
+    {
+      "id": "F06",
+      "name": "Mentor ép buộc con chia sẻ nỗi sợ hoặc tương tác cơ thể."
+    },
+    {
+      "id": "F07",
+      "name": "Mentor chuyển sang tư vấn sản phẩm khi chưa hiểu nhu cầu gia đình."
+    },
+    {
+      "id": "F08",
+      "name": "Mentor đưa thông tin giá, ưu đãi hoặc chính sách không được xác minh."
+    },
+    {
+      "id": "F09",
+      "name": "Mentor gây áp lực hoặc suy diễn sự đồng ý của phụ huynh."
+    },
+    {
+      "id": "F10",
+      "name": "Mentor không xác nhận được bất kỳ hành động tiếp theo nào sau buổi học."
+    }
+  ],
+  "status_rules": {
+    "FF": "Fully Followed – 100%",
+    "PF": "Partially Followed – 50%",
+    "NF": "Not Followed – 0%",
+    "NA": "Not Applicable – loại khỏi mẫu số",
+    "NE": "Insufficient Evidence – loại khỏi mẫu số, báo riêng"
+  },
+  "sequence_rules": {
+    "activity_order": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "note": "Thứ tự theo kịch bản gốc (Logic script + Full script). Mentor được linh hoạt câu chữ và thời lượng, KHÔNG được đảo các bước phụ thuộc nhau.",
+    "within_activity": [
+      {
+        "id": "S01",
+        "activity": 1,
+        "order": [
+          "OB01",
+          "OB02",
+          "OB03",
+          "OB04",
+          "OB05"
+        ],
+        "rule": "Chào hỏi → giới thiệu bản thân → giải thích giá trị/nội quy → xác nhận cam kết → giới thiệu lịch trình. Không yêu cầu ký cam kết trước khi giải thích nội quy."
+      },
+      {
+        "id": "S02",
+        "activity": 2,
+        "order": [
+          "OB06",
+          "OB07"
+        ],
+        "rule": "Giao thử thách từ khóa cho cả hai TRƯỚC khi phụ huynh rời đi làm WCA."
+      },
+      {
+        "id": "S03",
+        "activity": 3,
+        "order": [
+          "OB08",
+          "OB09",
+          "OB10",
+          "OB11",
+          "OB12",
+          "OB13",
+          "OB14",
+          "OB15",
+          "OB16",
+          "OB17",
+          "OB18",
+          "OB19",
+          "OB20"
+        ],
+        "rule": "Check-in cảm xúc → lắng nghe chính mình (sở thích → tự hào → nỗi sợ → củng cố) → thói quen (sức mạnh thói quen → câu chuyện → mục tiêu → Thân–Tâm–Trí) → sẵn sàng học → lịch 3 lớp → thử thách → xem lại từ khóa và chuẩn bị gọi phụ huynh vào. Các cặp OB09/OB10 và OB13/OB14 được đổi chỗ cho nhau."
+      },
+      {
+        "id": "S04",
+        "activity": 4,
+        "order": [
+          "OB21",
+          "OB22",
+          "OB23",
+          "OB24",
+          "OB25",
+          "OB26",
+          "OB27"
+        ],
+        "rule": "Chào phụ huynh quay lại + tóm tắt → nội quy/đồng hành → Chim sẻ gọi Đại bàng (giới thiệu vai → từ khóa và kỷ niệm → cảm xúc khó nói → cảm ơn) → check-out cảm xúc → con rời buổi TRƯỚC khi trao đổi riêng với phụ huynh."
+      },
+      {
+        "id": "S05",
+        "activity": 5,
+        "order": [
+          "OB28",
+          "OB29",
+          "OB30",
+          "OB31",
+          "OB32",
+          "OB33",
+          "OB34",
+          "OB35",
+          "OB36",
+          "OB37"
+        ],
+        "rule": "Nhắc triết lý khai giảng → khai thác kỳ vọng và khó khăn → nhận định sư phạm → WCA và nhu cầu thói quen → giới thiệu mô hình → so sánh gói → chi phí → xử lý băn khoăn → chốt bước tiếp theo → hướng dẫn đồng hành. OB30 và OB31 được đổi chỗ."
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "D01",
+        "before": "OB29",
+        "after": [
+          "OB32",
+          "OB33",
+          "OB34"
+        ],
+        "rule": "Phải hiểu nhu cầu gia đình (OB29) trước khi giới thiệu giải pháp, so sánh gói hay nói giá. Vi phạm → gắn cờ F07."
+      },
+      {
+        "id": "D02",
+        "before": "OB06",
+        "after": [
+          "OB24"
+        ],
+        "rule": "Từ khóa phải được viết ở hoạt động 2 trước khi dùng trong Chim sẻ gọi Đại bàng (LK01)."
+      },
+      {
+        "id": "D03",
+        "before": "OB07",
+        "after": [
+          "OB31"
+        ],
+        "rule": "WCA phải được giao trước phần trao đổi riêng thì mới có dữ liệu để dùng ở OB31 (LK04)."
+      },
+      {
+        "id": "D04",
+        "before": "OB27",
+        "after": [
+          "OB28"
+        ],
+        "rule": "Con phải rời buổi trước khi trao đổi riêng với phụ huynh."
+      },
+      {
+        "id": "D05",
+        "before": "OB35",
+        "after": [
+          "OB36"
+        ],
+        "rule": "Hỏi và xử lý băn khoăn trước khi chốt quyết định; không suy diễn sự đồng ý."
+      }
+    ]
+  }
+}
