@@ -15,6 +15,8 @@ from __future__ import annotations
 import copy
 from collections import Counter
 
+from .validate import GOAL_BY_STATUS
+
 CRIT_ORDER = {"NF": 0, "PF": 1, "FF": 2}
 LINK_ORDER = {"CHUA_DAT": 0, "DAT_MOT_PHAN": 1, "DAT": 2}
 SEQ_ORDER = {"LECH_NGHIEM_TRONG": 0, "LECH_NHE": 1, "DUNG_THU_TU": 2}
@@ -65,7 +67,8 @@ def aggregate(results: list[dict]) -> tuple[dict, dict]:
         statuses = [r["criteria"][i]["status"] for r in results]
         chosen = _vote(statuses, CRIT_ORDER, "NE")
         src = next(r["criteria"][i] for r in results if r["criteria"][i]["status"] == chosen) \
-            if chosen in statuses else {**results[0]["criteria"][i], "status": chosen, "evidence": [], "rationale": "Các lần chấm không thống nhất."}
+            if chosen in statuses else {**results[0]["criteria"][i], "status": chosen, "evidence": [], "rationale": "Các lần chấm không thống nhất.",
+               "goal_reason": "Các lần chấm không thống nhất.", "goal_achieved": GOAL_BY_STATUS[chosen]}
         item = copy.deepcopy(src)
         item["run_statuses"] = statuses
         if len(set(statuses)) > 1:

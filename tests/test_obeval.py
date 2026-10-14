@@ -48,6 +48,8 @@ def fake_raw(overrides=None):
     by["OB08"].update(status="NF", evidence=[ev("00:10:00", "Mentor", "Con khỏe không?")])
     by["OB09"].update(status="PF", evidence=[ev("00:10:10", "Mentor", "chắc con thích chơi game đúng không")])
     by["OB36"].update(status="NF", evidence=[ev("00:41:40", "Mentor", "câu này không hề có trong buổi học")])
+    for c in crit:
+        c.update(goal_reason="mục tiêu", goal_achieved=validate.GOAL_BY_STATUS[c["status"]])
     raw = {
         "data_quality": {"transcript_coverage": "partial", "speaker_confidence": "medium",
                          "speaker_mapping": [{"label": "SPEAKER_00", "role": "mentor"}], "issues": [], "insufficient_data": False},
@@ -193,6 +195,23 @@ class TestPrompt(unittest.TestCase):
     def test_system_prompt_strips_comment(self):
         self.assertNotIn("<!--", prompt.load_system_prompt())
 
+    def test_every_criterion_has_goal_and_signals(self):
+        for c in CRIT["criteria"]:
+            self.assertTrue(c.get("goal", "").strip(), c["id"])
+            self.assertTrue(c.get("signals") and all(x.strip() for x in c["signals"]), c["id"])
+
+    def test_schema_asks_goal_before_status(self):
+        item = prompt.schema_for_api(SCHEMA)["properties"]["criteria"]["items"]
+        keys = list(item["properties"])
+        self.assertLess(keys.index("goal_achieved"), keys.index("status"))  # model đánh giá mục tiêu trước khi chọn trạng thái
+        self.assertLess(keys.index("goal_reason"), keys.index("status"))
+        self.assertIn("goal_achieved", item["required"])
+        self.assertEqual(set(item["properties"]["goal_achieved"]["enum"]), set(validate.GOAL_BY_STATUS.values()))
+
+    def test_fake_raw_matches_schema(self):
+        errs = validate.schema_errors(fake_raw(), SCHEMA)
+        self.assertFalse([e for e in errs if "goal" in e], errs)
+
 
 class TestPostprocess(unittest.TestCase):
     def setUp(self):
@@ -206,12 +225,29 @@ class TestPostprocess(unittest.TestCase):
         self.assertEqual(res["criteria"][36]["status"], "NE")
         self.assertTrue(any("2 lần" in i for i in issues))
 
+    def test_normalize_goal_follows_status(self):
+        raw = fake_raw()
+        raw["criteria"][0]["goal_achieved"] = "no"      # OB01 là FF
+        del raw["criteria"][1]["goal_achieved"]         # OB02 thiếu trường
+        raw["criteria"] = raw["criteria"][:36]          # OB37 không trả về
+        res, issues = validate.normalize(raw)
+        by = {c["id"]: c for c in res["criteria"]}
+        self.assertEqual(by["OB01"]["status"], "FF")     # trạng thái (thứ tính điểm) giữ nguyên
+        self.assertEqual(by["OB01"]["goal_achieved"], "yes")
+        self.assertEqual(by["OB02"]["goal_achieved"], "yes")
+        self.assertEqual(by["OB37"]["goal_achieved"], "unknown")
+        self.assertEqual(by["OB37"]["goal_reason"], "")
+        self.assertTrue(any(i.startswith("OB01: goal_achieved") for i in issues))
+        clean, clean_issues = validate.normalize(fake_raw())
+        self.assertFalse([i for i in clean_issues if "goal_achieved" in i])
+
     def test_verify_downgrades_fabricated(self):
         res, _ = validate.normalize(fake_raw())
         res, issues, stats = verify.verify(res, self.tr)
         by = {c["id"]: c for c in res["criteria"]}
         self.assertEqual(by["OB36"]["status"], "NE")           # trích dẫn bịa → NE
         self.assertEqual(by["OB36"]["status_model"], "NF")
+        self.assertEqual(by["OB36"]["goal_achieved"], "unknown")
         self.assertEqual(by["OB08"]["status"], "NF")           # trích dẫn thật → giữ
         self.assertEqual([f["id"] for f in res["flags"]], ["F09"])  # cờ bịa bị tách ra
         self.assertEqual([f["id"] for f in res["flags_unverified"]], ["F01"])
@@ -489,6 +525,7 @@ class TestEnsemble(unittest.TestCase):
         r2 = self._run({"OB01": "PF"})
         merged, _ = ensemble_mod.aggregate([r1, r2])
         self.assertEqual({c["id"]: c for c in merged["criteria"]}["OB01"]["status"], "PF")
+        self.assertEqual({c["id"]: c for c in merged["criteria"]}["OB01"]["goal_achieved"], "partial")
 
     def test_replay_multi_runs(self):
         with tempfile.TemporaryDirectory() as d:

@@ -1,5 +1,6 @@
 {
   "source": "Onboarding Evaluation_AI Brief (PDC, đọc 09/10/2026)",
+  "goals_source": "Mục tiêu (goal) và dấu hiệu đạt (signals) của 37 tiêu chí: bản nháp 14/10/2026 soạn từ brief + logic kịch bản 090426, CHỜ PDC DUYỆT.",
   "activities": [
     {
       "id": 1,
@@ -56,6 +57,12 @@
       "name": "Chào hỏi và thiết lập kết nối",
       "activity": 1,
       "phase": null,
+      "goal": "Gia đình cảm thấy được chào đón và bắt đầu tương tác hai chiều với Mentor ngay từ đầu, đủ điều kiện kỹ thuật để buổi học diễn ra suôn sẻ.",
+      "signals": [
+        "Cả phụ huynh và con đều đáp lời Mentor.",
+        "Vấn đề âm thanh, hình ảnh (nếu có) được kiểm tra hoặc xử lý.",
+        "Gia đình nói thêm ngoài câu trả lời tối thiểu (không khí thoải mái)."
+      ],
       "requirements": [
         "Chào cả phụ huynh và học sinh.",
         "Xác nhận âm thanh, hình ảnh và điều kiện tương tác.",
@@ -70,6 +77,12 @@
       "name": "Giới thiệu Mentor và xây dựng sự tin tưởng",
       "activity": 1,
       "phase": null,
+      "goal": "Gia đình nhìn nhận Mentor là một nhà giáo uy tín, ấm áp và hiểu vai trò của Mentor trong hành trình của con. Đây là nền để phụ huynh tin các nhận định sư phạm ở hoạt động 5.",
+      "signals": [
+        "Mentor nêu tên, vai trò và ít nhất một kinh nghiệm hoặc câu chuyện gắn với giáo dục.",
+        "Gia đình có phản hồi (hỏi lại, bày tỏ, xác nhận).",
+        "Mentor giữ tác phong và xưng hô của nhà giáo."
+      ],
       "requirements": [
         "Giới thiệu tên, vai trò.",
         "Chia sẻ một thông tin cá nhân hoặc kinh nghiệm phù hợp nhằm tạo kết nối và thể hiện năng lực.",
@@ -83,6 +96,11 @@
       "name": "Giới thiệu giá trị và nội quy TeenCare",
       "activity": 1,
       "phase": null,
+      "goal": "Gia đình hiểu và đồng thuận các giá trị, nguyên tắc tương tác (đặc biệt là tôn trọng thông tin riêng tư) để con yên tâm chia sẻ ở phần học riêng.",
+      "signals": [
+        "Mentor giải thích ít nhất nguyên tắc tôn trọng thông tin cá nhân.",
+        "Gia đình xác nhận hiểu hoặc đồng ý, hoặc đặt câu hỏi và được trả lời."
+      ],
       "requirements": [
         "Giới thiệu các giá trị tôn trọng, cởi mở, tự tin, tử tế.",
         "Giải thích những nguyên tắc tương tác, đặc biệt là việc tôn trọng thông tin cá nhân.",
@@ -96,6 +114,11 @@
       "name": "Xác nhận cam kết học tập",
       "activity": 1,
       "phase": null,
+      "goal": "Cả phụ huynh và con chủ động xác nhận cam kết học tập như một cam kết chung, làm cơ sở để nhắc lại tinh thần kiên trì ở các phần sau.",
+      "signals": [
+        "Có lời xác nhận rõ ràng của con và của phụ huynh (không chỉ một bên).",
+        "Mentor nói rõ đây là cam kết chung giữa gia đình và Mentor."
+      ],
       "requirements": [
         "Mời cả phụ huynh và học sinh tham gia xác nhận cam kết.",
         "Thể hiện đây là cam kết chung giữa gia đình và Mentor.",
@@ -109,6 +132,11 @@
       "name": "Giới thiệu lịch trình buổi học",
       "activity": 1,
       "phase": null,
+      "goal": "Gia đình biết trước các phần của buổi, đặc biệt là việc con học riêng và phụ huynh có nhiệm vụ riêng, để các lần chuyển tiếp diễn ra suôn sẻ.",
+      "signals": [
+        "Mentor nêu lần lượt các phần của buổi.",
+        "Gia đình xác nhận, không bị bất ngờ khi chuyển sang phần học riêng."
+      ],
       "requirements": [
         "Giới thiệu phần khởi động chung.",
         "Thông báo phần học riêng với con và nhiệm vụ dành cho phụ huynh.",
@@ -123,6 +151,12 @@
       "name": "Thực hiện thử thách 2–3 từ khóa",
       "activity": 2,
       "phase": null,
+      "goal": "Thu được từ khóa phụ huynh viết về con và con viết về phụ huynh để dùng lại trong \"Chim sẻ gọi Đại bàng\" (LK01), đồng thời tạo tương tác đầu tiên giữa hai bên.",
+      "signals": [
+        "Cả phụ huynh và con được giao nhiệm vụ rõ ràng.",
+        "Có dấu hiệu đã viết xong (xác nhận, đọc lên hoặc báo đã xong).",
+        "Mentor dặn giữ lại câu trả lời cho phần sau."
+      ],
       "requirements": [
         "Yêu cầu phụ huynh viết 2–3 từ mô tả con.",
         "Yêu cầu con viết 2–3 từ mô tả phụ huynh.",
@@ -137,6 +171,12 @@
       "name": "Giao nhiệm vụ riêng cho phụ huynh",
       "activity": 2,
       "phase": null,
+      "goal": "Phụ huynh rời phòng với nhiệm vụ làm bài WCA và hiểu mục đích của bài, để có dữ liệu thật cho phần trao đổi riêng (LK04); con có không gian an toàn để học riêng.",
+      "signals": [
+        "Phụ huynh xác nhận đã nhận đường dẫn và biết cần làm gì.",
+        "Mentor nói mục đích của bài đánh giá.",
+        "Con xác nhận vẫn ở lại được với thiết bị và không gian phù hợp."
+      ],
       "requirements": [
         "Hướng dẫn phụ huynh chuyển sang không gian khác.",
         "Giới thiệu bài đánh giá Whole Child Assessment (WCA).",
@@ -152,6 +192,12 @@
       "name": "Xác nhận không gian riêng tư và cảm xúc của con",
       "activity": 3,
       "phase": "A – Check-in cảm xúc",
+      "goal": "Con gọi tên được cảm xúc thật của mình lúc này và cảm thấy được chấp nhận. Đây là bước mở đầu sự tin tưởng giữa con và Mentor, và là dữ liệu quan sát đầu tiên cho nhận định sư phạm (LK02).",
+      "signals": [
+        "Con nêu một hoặc nhiều cảm xúc cụ thể (không chỉ \"bình thường\", \"khỏe\").",
+        "Mentor hỏi thêm nguyên nhân hoặc bối cảnh của ít nhất một cảm xúc.",
+        "Mentor phản hồi không phán xét."
+      ],
       "requirements": [
         "Xác nhận con đã sẵn sàng học riêng.",
         "Sử dụng câu hỏi hoặc công cụ check-in cảm xúc.",
@@ -169,6 +215,12 @@
       "name": "Khám phá sở thích cá nhân",
       "activity": 3,
       "phase": "B – Lắng nghe chính mình",
+      "goal": "Mentor hiểu điều con yêu thích để kết nối với con và dùng lại khi nói về thói quen, mục tiêu (OB14, LK03).",
+      "signals": [
+        "Con nêu ít nhất 2 sở thích cụ thể.",
+        "Mentor hỏi sâu hơn về ít nhất một sở thích.",
+        "Mentor ghi nhận, không sửa hay đánh giá sở thích của con."
+      ],
       "requirements": [
         "Chia sẻ hoặc làm mẫu cách giới thiệu sở thích.",
         "Mời học sinh chia sẻ tối thiểu 2 sở thích.",
@@ -183,6 +235,11 @@
       "name": "Khám phá niềm tự hào về bản thân",
       "activity": 3,
       "phase": "B – Lắng nghe chính mình",
+      "goal": "Con nhìn nhận được điểm mạnh, giá trị của bản thân; Mentor có chất liệu để khen con cụ thể với phụ huynh ở hoạt động 4 và 5 (OB21, OB30).",
+      "signals": [
+        "Con kể được ít nhất một điều mình tự hào.",
+        "Mentor ghi nhận cụ thể phẩm chất hoặc nỗ lực của con (không chỉ \"giỏi lắm\")."
+      ],
       "requirements": [
         "Hướng dẫn con nhìn lại một điều bản thân tự hào.",
         "Có thể dùng câu chuyện bản thân làm mẫu.",
@@ -197,6 +254,12 @@
       "name": "Khám phá nỗi sợ, nỗi buồn hoặc những điều khó chia sẻ",
       "activity": 3,
       "phase": "B – Lắng nghe chính mình",
+      "goal": "Con cảm thấy an toàn để nhận diện, và nếu muốn thì chia sẻ, điều khiến mình lo lắng hoặc sợ hãi; Mentor hiểu khó khăn của con để làm cơ sở cho nhận định sư phạm (LK02).",
+      "signals": [
+        "Mentor có câu hỏi hoặc hoạt động mời con nghĩ về nỗi sợ, nỗi buồn.",
+        "Con chia sẻ, hoặc từ chối và được tôn trọng.",
+        "Mentor phản hồi đồng cảm, không ép buộc."
+      ],
       "requirements": [
         "Tạo một hoạt động suy ngẫm về những điều khiến con lo lắng hoặc sợ hãi.",
         "Hướng dẫn con nhận diện cảm xúc và nguyên nhân.",
@@ -214,6 +277,12 @@
       "name": "Củng cố thông điệp lắng nghe và tin tưởng bản thân",
       "activity": 3,
       "phase": "B – Lắng nghe chính mình",
+      "goal": "Con đúc kết được thông điệp: lắng nghe chính mình là quan trọng, và khi gặp khó khăn có Mentor đồng hành.",
+      "signals": [
+        "Mentor tổng kết ý nghĩa của việc lắng nghe chính mình.",
+        "Mentor ghi nhận sự dũng cảm hoặc nỗ lực của con.",
+        "Con có phản hồi (đồng ý, nói lại ý, bày tỏ)."
+      ],
       "requirements": [
         "Tổng kết ý nghĩa của việc lắng nghe chính mình.",
         "Ghi nhận sự dũng cảm và nỗ lực của con.",
@@ -228,6 +297,11 @@
       "name": "Giải thích sức mạnh của thói quen",
       "activity": 3,
       "phase": "C – Xây dựng thói quen",
+      "goal": "Con hiểu rằng hành động nhỏ lặp lại mỗi ngày tạo ra kết quả lớn. Đây là nền để con nhận thử thách thói quen (OB19).",
+      "signals": [
+        "Có ít nhất một ví dụ gần gũi về thói quen.",
+        "Con trả lời câu hỏi của Mentor hoặc tự nói lại được ý chính, không chỉ Mentor độc thoại."
+      ],
       "requirements": [
         "Liên hệ việc lắng nghe bản thân với chăm sóc bản thân hằng ngày.",
         "Sử dụng ít nhất một ví dụ gần gũi về thói quen.",
@@ -241,6 +315,11 @@
       "name": "Sử dụng câu chuyện minh họa",
       "activity": 3,
       "phase": "C – Xây dựng thói quen",
+      "goal": "Con thấy bài học về thói quen liên quan đến chính mình, không phải một câu chuyện xa lạ.",
+      "signals": [
+        "Câu chuyện hoặc ví dụ được nối với sở thích, mục tiêu hoặc hoàn cảnh của con.",
+        "Con có phản hồi hoặc tự liên hệ với bản thân."
+      ],
       "requirements": [
         "Kể ít nhất một câu chuyện hoặc ví dụ về việc hình thành thói quen.",
         "Kết nối ví dụ với hoàn cảnh, sở thích hoặc mục tiêu của con.",
@@ -256,6 +335,12 @@
       "name": "Xác định mục tiêu cá nhân",
       "activity": 3,
       "phase": "C – Xây dựng thói quen",
+      "goal": "Con tự nói ra mục tiêu dài hạn và ngắn hạn của mình, và nhận ra cần thời gian, rèn luyện, hỗ trợ để đạt được. Đây là dữ liệu cho lịch học, thử thách (LK03) và cho phần trao đổi với phụ huynh.",
+      "signals": [
+        "Con nêu ít nhất một mục tiêu cụ thể.",
+        "Mentor phản hồi và nối mục tiêu với việc cần rèn luyện lâu dài.",
+        "Con đồng tình hoặc bổ sung."
+      ],
       "requirements": [
         "Hỏi con về mục tiêu dài hạn, chẳng hạn điều con mong muốn khi 18 tuổi.",
         "Hỏi về mục tiêu ngắn hạn.",
@@ -270,6 +355,12 @@
       "name": "Kết nối với định hướng Thân – Tâm – Trí",
       "activity": 3,
       "phase": "C – Xây dựng thói quen",
+      "goal": "Con hiểu định hướng Thân – Tâm – Trí giúp chính mục tiêu của con như thế nào.",
+      "signals": [
+        "Mentor giải thích bằng lời dễ hiểu theo lứa tuổi.",
+        "Mentor liên hệ ít nhất một phần của định hướng với mục tiêu con vừa nêu.",
+        "Con có phản hồi."
+      ],
       "requirements": [
         "Giải thích định hướng phát triển toàn diện tại TeenCare.",
         "Liên hệ thể chất khỏe mạnh, tâm hồn bình an và trí tuệ với những mục tiêu của con.",
@@ -283,6 +374,12 @@
       "name": "Xây dựng sự sẵn sàng tham gia học tập",
       "activity": 3,
       "phase": "D – Hành động và lịch học",
+      "goal": "Con tự bày tỏ mong muốn tiếp tục học và cam kết kiên trì bằng lời của mình, để khi trao đổi với phụ huynh đã có lời của chính con, chặn trước băn khoăn \"sợ con không học\".",
+      "signals": [
+        "Con trả lời bằng lời của mình về việc muốn tiếp tục học.",
+        "Mentor không trả lời thay hay suy đoán ý của con.",
+        "Mentor ghi nhận sự chủ động của con."
+      ],
       "requirements": [
         "Hỏi con về mong muốn tiếp tục tham gia.",
         "Giúp con hiểu những hoạt động sắp tới",
@@ -297,6 +394,12 @@
       "name": "Thống nhất lịch học ba lớp",
       "activity": 3,
       "phase": "D – Hành động và lịch học",
+      "goal": "Con có lịch cụ thể, khả thi cho cả ba lớp (Mentor 1:1, Kỹ năng sống, Thể chất), biến mong muốn học thành kế hoạch thực tế (LK06).",
+      "signals": [
+        "Nêu được lịch hoặc khung giờ cho từng lớp.",
+        "Có kiểm tra trùng lịch với hoạt động khác.",
+        "Con xác nhận và ghi lại lịch."
+      ],
       "requirements": [
         "Giới thiệu lịch Mentor 1:1.",
         "Giới thiệu lịch Kỹ năng sống.",
@@ -312,6 +415,12 @@
       "name": "Giao thử thách hình thành thói quen",
       "activity": 3,
       "phase": "D – Hành động và lịch học",
+      "goal": "Con chọn được một thử thách thói quen cụ thể và biết khi nào làm, báo cáo thế nào. Đây là hành động đầu tiên sau buổi học (LK03, LK06).",
+      "signals": [
+        "Con tự chọn thử thách.",
+        "Xác định thời điểm thực hiện.",
+        "Mentor hướng dẫn cách báo cáo kết quả và con xác nhận sẵn sàng."
+      ],
       "requirements": [
         "Giới thiệu thử thách cụ thể cho giai đoạn đầu.",
         "Cho con lựa chọn hoạt động phù hợp, như dọn giường hoặc tập thể dục.",
@@ -327,6 +436,12 @@
       "name": "Chuẩn bị chuyển tiếp sang phần gia đình",
       "activity": 3,
       "phase": "D – Hành động và lịch học",
+      "goal": "Con sẵn sàng cả về nội dung lẫn cảm xúc cho phần gia đình: nói được cam kết vượt khó và có sẵn từ khóa về phụ huynh để dùng trong \"Chim sẻ gọi Đại bàng\".",
+      "signals": [
+        "Con trả lời câu hỏi về việc tiếp tục học khi gặp khó khăn (ví dụ: sẽ động viên mẹ học tiếp).",
+        "Mentor xem lại các từ khóa con đã viết về phụ huynh.",
+        "Có lời chuẩn bị trước khi mời phụ huynh quay lại."
+      ],
       "requirements": [
         "Nhắc lại ý nghĩa của sự kiên trì và đồng hành.",
         "Khuyến khích con chia sẻ suy nghĩ về việc tiếp tục học khi gặp khó khăn.",
@@ -341,6 +456,13 @@
       "name": "Tóm tắt kết quả buổi học riêng",
       "activity": 4,
       "phase": "A – Kết nối lại và tổng kết",
+      "goal": "Phụ huynh nhận được hình ảnh tích cực, có cơ sở về buổi học riêng của con (con học gì, con thể hiện tốt ở đâu) mà không lộ điều riêng tư, để phụ huynh tin vào nhận định của Mentor ở hoạt động 5.",
+      "signals": [
+        "Mentor tóm tắt các nội dung con đã học.",
+        "Mentor nêu điểm tích cực cụ thể đã quan sát được ở con.",
+        "Mentor không kể lại điều con chia sẻ riêng.",
+        "Phụ huynh có phản hồi."
+      ],
       "requirements": [
         "Chào đón phụ huynh quay lại.",
         "Tóm tắt các nội dung con đã học: lắng nghe bản thân, thói quen và mục tiêu cá nhân.",
@@ -357,6 +479,12 @@
       "name": "Củng cố tinh thần đồng hành và nội quy",
       "activity": 4,
       "phase": "A – Kết nối lại và tổng kết",
+      "goal": "Cả phụ huynh và con, trước mặt nhau, nói ra quan điểm về việc kiên trì theo hành trình học; phụ huynh biết vai trò của mình trong thử thách của con.",
+      "signals": [
+        "Mentor nhắc lại lời cam kết của con trước mặt phụ huynh.",
+        "Phụ huynh và con đều có lượt nói về hành trình học.",
+        "Mentor nhắc thử thách của con và cách phụ huynh hỗ trợ."
+      ],
       "requirements": [
         "Nhắc lại ý nghĩa của việc kiên trì.",
         "Mời cả phụ huynh và con thể hiện quan điểm về hành trình học.",
@@ -371,6 +499,11 @@
       "name": "Giới thiệu vai trò và tạo không khí",
       "activity": 4,
       "phase": "B – Chim sẻ gọi Đại bàng",
+      "goal": "Phụ huynh và con hiểu vai trò \"Chim sẻ\" – \"Đại bàng\" và sẵn sàng tham gia trong không khí ấm áp.",
+      "signals": [
+        "Mentor giới thiệu vai trò và cách tham gia.",
+        "Cả hai phản hồi hoặc làm theo hướng dẫn khởi động."
+      ],
       "requirements": [
         "Giới thiệu con là \"Chim sẻ\" và phụ huynh là \"Đại bàng\".",
         "Giải thích hoạt động.",
@@ -385,6 +518,12 @@
       "name": "Hoạt động nhìn lại ký ức và chia sẻ từ khóa",
       "activity": 4,
       "phase": "B – Chim sẻ gọi Đại bàng",
+      "goal": "Phụ huynh và con nghe được điều người kia nghĩ về mình qua từ khóa và kỷ niệm chung, tạo kết nối cảm xúc (LK01).",
+      "signals": [
+        "Từ khóa viết ở hoạt động 2 được đọc lên hoặc dùng lại.",
+        "Mỗi người có lượt chia sẻ về người còn lại.",
+        "Có phản hồi ghi nhận giữa hai người."
+      ],
       "requirements": [
         "Mời hai người dành thời gian chú ý đến nhau.",
         "Gợi nhớ những kỷ niệm chung.",
@@ -400,6 +539,12 @@
       "name": "Hoạt động chia sẻ cảm xúc khó nói",
       "activity": 4,
       "phase": "B – Chim sẻ gọi Đại bàng",
+      "goal": "Phụ huynh và con có cơ hội nói ra và lắng nghe những cảm xúc khó nói một cách an toàn, hai chiều.",
+      "signals": [
+        "Mentor hướng dẫn nhớ lại những thời điểm khó khăn.",
+        "Mỗi người được mời chia sẻ và có quyền từ chối.",
+        "Mentor nhắc người nghe ghi nhận, không tranh luận hay phán xét."
+      ],
       "requirements": [
         "Hướng dẫn hai người nhớ lại những thời điểm khó khăn hoặc cảm xúc chưa được nói ra.",
         "Mời mỗi người chia sẻ nếu cảm thấy thoải mái.",
@@ -416,6 +561,12 @@
       "name": "Hoạt động ghi nhận và cảm ơn",
       "activity": 4,
       "phase": "B – Chim sẻ gọi Đại bàng",
+      "goal": "Mỗi bên nói được lời cảm ơn hoặc ghi nhận người kia, khép lại phần gia đình bằng cảm xúc tích cực.",
+      "signals": [
+        "Phụ huynh nói lời cảm ơn hoặc ghi nhận con.",
+        "Con nói lời cảm ơn hoặc ghi nhận phụ huynh.",
+        "Mentor tổng kết ý nghĩa của việc lắng nghe và ghi nhận."
+      ],
       "requirements": [
         "Hướng dẫn hai người nhớ lại những kỷ niệm tích cực.",
         "Mời phụ huynh gửi lời cảm ơn tới con.",
@@ -430,6 +581,12 @@
       "name": "Check-out cảm xúc và kết thúc hoạt động",
       "activity": 4,
       "phase": "B – Chim sẻ gọi Đại bàng",
+      "goal": "Biết được cảm xúc của cả hai sau hoạt động, khép lại phần gia đình trọn vẹn, và con rời buổi trước khi Mentor trao đổi riêng với phụ huynh.",
+      "signals": [
+        "Con và phụ huynh đều được hỏi cảm xúc và có trả lời.",
+        "Mentor cảm ơn và kết thúc phần gia đình.",
+        "Con rời buổi trước khi bắt đầu hoạt động 5."
+      ],
       "requirements": [
         "Hỏi cảm xúc của con sau hoạt động.",
         "Hỏi cảm xúc của phụ huynh.",
@@ -445,6 +602,12 @@
       "name": "Nhắc lại nội dung buổi khai giảng",
       "activity": 5,
       "phase": "A – Tái kết nối triết lý giáo dục",
+      "goal": "Phụ huynh nhớ lại và đồng tình với triết lý giáo dục TeenCare (hiểu con trước, giải quyết gốc rễ, thay đổi bền vững cần kiên trì), làm khung để phụ huynh tự đánh giá nhu cầu của con.",
+      "signals": [
+        "Mentor hỏi phụ huynh về buổi khai giảng.",
+        "Mentor giải thích các triết lý bằng ví dụ hoặc lời dễ hiểu.",
+        "Phụ huynh đồng tình hoặc tự liên hệ với con."
+      ],
       "requirements": [
         "Hỏi phụ huynh về trải nghiệm tại buổi khai giảng.",
         "Xác định phụ huynh đã tham gia hoặc nhớ những nội dung nào.",
@@ -461,6 +624,12 @@
       "name": "Khai thác lý do gia đình lựa chọn TeenCare",
       "activity": 5,
       "phase": "B – Khai thác kỳ vọng và đánh giá con",
+      "goal": "Phụ huynh tự nói ra lý do chọn TeenCare, kỳ vọng, khó khăn của con và những cách đã thử chưa hiệu quả, để phụ huynh tự thuyết phục chính mình và Mentor có dữ liệu cho giải pháp (LK05).",
+      "signals": [
+        "Phụ huynh nêu lý do, kỳ vọng và khó khăn cụ thể của con.",
+        "Mentor hỏi về những cách gia đình đã thử.",
+        "Mentor tóm tắt lại các vấn đề chính và phụ huynh xác nhận."
+      ],
       "requirements": [
         "Hỏi phụ huynh vì sao lựa chọn TeenCare.",
         "Tìm hiểu kỳ vọng của gia đình.",
@@ -476,6 +645,12 @@
       "name": "Đưa ra nhận định sư phạm về học sinh",
       "activity": 5,
       "phase": "B – Khai thác kỳ vọng và đánh giá con",
+      "goal": "Phụ huynh tin và đồng tình với nhận định sư phạm của Mentor về con (điểm mạnh trước, điều cần hỗ trợ sau), vì nhận định dựa trên bằng chứng từ buổi học và từ chính lời phụ huynh.",
+      "signals": [
+        "Nhận định bắt đầu bằng điểm mạnh của con.",
+        "Điều cần hỗ trợ được nêu kèm bằng chứng cụ thể từ phần học riêng hoặc lời phụ huynh.",
+        "Phụ huynh đồng tình, bổ sung, hoặc tự nói ra điều con còn thiếu."
+      ],
       "requirements": [
         "Bắt đầu từ những điểm mạnh hoặc tiến bộ quan sát được.",
         "Nêu những điểm con cần được hỗ trợ.",
@@ -493,6 +668,12 @@
       "name": "Khai thác kết quả WCA và nhu cầu xây dựng thói quen",
       "activity": 5,
       "phase": "B – Khai thác kỳ vọng và đánh giá con",
+      "goal": "Phụ huynh tự nhận ra khoảng cách giữa kỳ vọng và hiện trạng của con, và rằng thay đổi thói quen cần thời gian dài, dựa trên kết quả WCA hoặc thông tin thay thế (LK04).",
+      "signals": [
+        "Mentor xác nhận tình trạng WCA và dùng kết quả cụ thể (nếu có).",
+        "Phụ huynh nói ra điều mình nhận ra.",
+        "Có trao đổi về thời gian cần thiết để thay đổi thói quen."
+      ],
       "requirements": [
         "Xác nhận tình trạng hoàn thành WCA.",
         "Nếu có kết quả, sử dụng dữ liệu phù hợp để trao đổi.",
@@ -508,6 +689,12 @@
       "name": "Giới thiệu mô hình TeenCare",
       "activity": 5,
       "phase": "C – Giới thiệu giải pháp giáo dục",
+      "goal": "Phụ huynh hiểu từng thành phần của chương trình giải quyết nhu cầu đã nêu của gia đình như thế nào, không chỉ nghe danh sách tính năng (LK05).",
+      "signals": [
+        "Mentor giới thiệu vai trò của Mentor 1:1, Kỹ năng sống, Thể chất và công nghệ giáo dục.",
+        "Mỗi thành phần được gắn với một nhu cầu phụ huynh đã nói.",
+        "Phụ huynh có phản hồi."
+      ],
       "requirements": [
         "Giới thiệu các thành phần liên quan trong hệ sinh thái.",
         "Giải thích vai trò của Mentor 1:1, lớp Kỹ năng sống, hoạt động Thể chất và công nghệ giáo dục.",
@@ -521,6 +708,12 @@
       "name": "So sánh các chương trình Học tập và Huấn luyện",
       "activity": 5,
       "phase": "C – Giới thiệu giải pháp giáo dục",
+      "goal": "Phụ huynh có đủ thông tin để tự chọn chương trình phù hợp với nhu cầu gia đình.",
+      "signals": [
+        "Mentor so sánh điểm chung, khác biệt về đầu ra và tần suất Mentor 1:1.",
+        "Mentor hỏi phụ huynh chương trình nào phù hợp.",
+        "Phụ huynh tự nêu lựa chọn hoặc điều đang cân nhắc."
+      ],
       "requirements": [
         "Giải thích điểm chung giữa các chương trình.",
         "Làm rõ khác biệt về mục tiêu đầu ra.",
@@ -536,6 +729,12 @@
       "name": "Giải thích chi phí và điều kiện đăng ký",
       "activity": 5,
       "phase": "C – Giới thiệu giải pháp giáo dục",
+      "goal": "Phụ huynh hiểu chính xác tổng chi phí, thời gian, cách thanh toán và điều kiện, không hiểu nhầm về nghĩa vụ thanh toán.",
+      "signals": [
+        "Có tổng số tiền của cả gói (không chỉ giá theo tháng).",
+        "Mentor nêu thời gian chương trình và cách thanh toán.",
+        "Mentor hỏi phụ huynh còn câu hỏi nào không."
+      ],
       "requirements": [
         "Nêu giá và quyền lợi theo chính sách hiện hành.",
         "Giải thích thời gian chương trình.",
@@ -551,6 +750,12 @@
       "name": "Lắng nghe và giải quyết băn khoăn",
       "activity": 5,
       "phase": "D – Xử lý băn khoăn và thống nhất bước tiếp theo",
+      "goal": "Băn khoăn thật của phụ huynh được nói ra và được giải đáp bằng thông tin chính xác, gắn với nhu cầu của gia đình, không gây áp lực.",
+      "signals": [
+        "Mentor mời phụ huynh nêu băn khoăn.",
+        "Mentor xác định đúng loại băn khoăn (hiệu quả, thời gian, con, tài chính...).",
+        "Phản hồi có liên hệ với nhu cầu gia đình đã nêu, không suy diễn sự đồng ý."
+      ],
       "requirements": [
         "Hỏi phụ huynh có băn khoăn nào chưa được giải đáp.",
         "Xác định đúng nguyên nhân băn khoăn: hiệu quả, thời gian, khả năng tham gia của con, tài chính hoặc lý do khác.",
@@ -566,6 +771,12 @@
       "name": "Xác nhận lựa chọn và bước tiếp theo",
       "activity": 5,
       "phase": "D – Xử lý băn khoăn và thống nhất bước tiếp theo",
+      "goal": "Buổi kết thúc với trạng thái rõ ràng do chính phụ huynh nói ra (đồng ý, chưa quyết định, hẹn lại) và bước tiếp theo cụ thể.",
+      "signals": [
+        "Phụ huynh nói rõ quyết định bằng lời của mình.",
+        "Mentor giải thích thủ tục hoặc hẹn bước tiếp theo.",
+        "Mentor tóm tắt những điều đã thống nhất."
+      ],
       "requirements": [
         "Hỏi rõ quyết định hoặc mong muốn tiếp theo của phụ huynh.",
         "Nếu đồng ý đăng ký, giải thích các thủ tục cần thực hiện.",
@@ -580,6 +791,12 @@
       "name": "Hướng dẫn phụ huynh đồng hành cùng con",
       "activity": 5,
       "phase": "D – Xử lý băn khoăn và thống nhất bước tiếp theo",
+      "goal": "Phụ huynh biết cụ thể việc mình cần làm để đồng hành cùng con sau buổi (thử thách, lịch học, ứng dụng, kênh liên lạc) (LK06).",
+      "signals": [
+        "Mentor nhắc thử thách của con và cách phụ huynh hỗ trợ.",
+        "Mentor nhắc lịch học và kênh liên lạc.",
+        "Phụ huynh xác nhận."
+      ],
       "requirements": [
         "Nhắc lại thử thách đã giao cho con.",
         "Giải thích cách phụ huynh hỗ trợ.",

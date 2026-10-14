@@ -121,6 +121,8 @@
         "type": "object",
         "required": [
           "id",
+          "goal_reason",
+          "goal_achieved",
           "status",
           "rationale",
           "evidence",
@@ -130,6 +132,20 @@
           "id": {
             "type": "string",
             "pattern": "^OB(0[1-9]|[12][0-9]|3[0-7])$"
+          },
+          "goal_reason": {
+            "type": "string",
+            "description": "1–2 câu: mục tiêu (goal) của cấu phần đạt tới đâu, dựa trên dấu hiệu nào"
+          },
+          "goal_achieved": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "partial",
+              "no",
+              "unknown"
+            ],
+            "description": "Khớp trạng thái: FF→yes, PF→partial, NF→no, NA/NE→unknown"
           },
           "status": {
             "type": "string",

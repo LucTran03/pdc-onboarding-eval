@@ -7,7 +7,7 @@
 | File | Vai trò |
 |---|---|
 | [`system_prompt.md`](system_prompt.md) | System instruction gửi nguyên văn (bỏ comment đầu file) |
-| [`criteria.json`](criteria.json) | Danh mục chuẩn: 5 hoạt động + trọng số, 37 tiêu chí OB, 6 LK, 10 cờ F. Sinh tự động từ brief PDC; brief đổi thì sinh lại |
+| [`criteria.json`](criteria.json) | Danh mục chuẩn: 5 hoạt động + trọng số, 37 tiêu chí OB, 6 LK, 10 cờ F. Sinh tự động từ brief PDC; brief đổi thì sinh lại. Mỗi tiêu chí có thêm `goal` (mục tiêu cấu phần) + `signals` (dấu hiệu đạt) — model chấm theo mức đạt mục tiêu, không theo câu chữ. `goal`/`signals` là bản nháp 14/10 **chờ PDC duyệt**; sinh lại từ brief thì phải giữ hai trường này |
 | [`output_schema.json`](output_schema.json) | Schema JSON model phải trả về |
 
 ## 2. Ghép nội dung gửi model (phần user)
