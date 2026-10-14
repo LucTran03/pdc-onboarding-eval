@@ -6,6 +6,7 @@ import re
 from email.message import EmailMessage
 
 from .score import pct
+from .transcript import fmt_time, parse_time
 
 STATUS_LABEL = {"FF": "Làm đủ", "PF": "Làm một phần", "NF": "Chưa làm", "NA": "Không áp dụng", "NE": "Không đủ dữ liệu"}
 STATUS_COLOR = {"FF": "#1e7b4a", "PF": "#b26a00", "NF": "#b3261e", "NA": "#6b6b6b", "NE": "#6b6b6b"}
@@ -93,6 +94,56 @@ def _timeline(result: dict) -> dict[int, dict]:
     return out
 
 
+def activity_ranges(result: dict, names: Names, duration: float | None = None) -> dict[int, dict]:
+    """Mốc từng hoạt động (giây): {hoạt động: {found, start, end, estimated}}.
+
+    Model hay chỉ trả mốc bắt đầu, có ca chỉ trả hoạt động 1 (đo 12/10 trên 2 ca thật) → code bù:
+    thiếu bắt đầu → trích dẫn sớm nhất của các tiêu chí thuộc hoạt động (estimated, in "khoảng");
+    thiếu kết thúc → mốc bắt đầu kế tiếp theo thời gian; hoạt động cuối → hết buổi (duration) hoặc trích dẫn muộn nhất.
+    """
+    tl = _timeline(result)
+    ev_ts: dict[int, list[float]] = {}
+    for c in result.get("criteria") or []:
+        a = names.act_of(c.get("id"))
+        for ev in _verified(c.get("evidence")):
+            t = parse_time(ev.get("timestamp"))
+            if a and t is not None:
+                ev_ts.setdefault(a, []).append(t)
+    out: dict[int, dict] = {}
+    for a in names.act:
+        t = tl.get(a, {})
+        if t.get("found") is False and not ev_ts.get(a):
+            out[a] = {"found": False}
+            continue
+        start, est = parse_time(t.get("start")), False
+        if start is None and ev_ts.get(a):
+            start, est = min(ev_ts[a]), True
+        if start is None:
+            continue
+        end = parse_time(t.get("end"))
+        out[a] = {"found": True, "start": start, "end": end if end is not None and end > start else None, "estimated": est}
+    starts = sorted(v["start"] for v in out.values() if v.get("found"))
+    for a, v in out.items():
+        if not v.get("found") or v["end"] is not None:
+            continue
+        later = [s for s in starts if s > v["start"]]
+        last = max([duration or 0.0] + ev_ts.get(a, []))
+        v["end"] = later[0] if later else (last if last > v["start"] else None)
+    return out
+
+
+def _range_text(v: dict | None, ref: str = "") -> str:
+    if not v:
+        return "không xác định được"
+    if not v.get("found"):
+        return "không thấy trong buổi"
+    txt = f"{fmt_time(v['start'])}–{fmt_time(v['end'])} · {round((v['end'] - v['start']) / 60)} phút" if v.get("end") \
+        else f"từ {fmt_time(v['start'])}"
+    if ref:
+        txt += f" (chuẩn {ref.split(',')[0]})"  # "20–25 phút, cần thống nhất lại" → "20–25 phút"
+    return ("khoảng " if v.get("estimated") else "") + txt
+
+
 def subject(meta: dict, scores: dict) -> str:
     date = meta.get("session_date") or ""
     head = f"Góp ý buổi onboarding {date}".strip()
@@ -117,7 +168,7 @@ def mentor_email_page(result: dict, scores: dict, meta: dict, names: Names) -> s
 
 def mentor_email_html(result: dict, scores: dict, meta: dict, names: Names) -> str:
     greet = meta.get("mentor_name")
-    tl = _timeline(result)
+    ranges = activity_ranges(result, names, meta.get("duration_sec"))
     p = []
     p.append('<div style="font-family:Arial,Helvetica,sans-serif;max-width:720px;color:#1f1f1f;line-height:1.5">')
     p.append(f"<p>Chào {e(greet) if greet else 'thầy/cô'},</p>")
@@ -143,10 +194,9 @@ def mentor_email_html(result: dict, scores: dict, meta: dict, names: Names) -> s
     p.append("<h3 style='margin-bottom:6px'>Mức độ thực hiện theo 5 hoạt động</h3>")
     p.append(f"<table style='{_CSS_TABLE}'><tr style='background:#f4f4f4'>"
              f"<th style='{_CSS_TD}'>Hoạt động</th><th style='{_CSS_TD}'>Trọng số</th>"
-             f"<th style='{_CSS_TD}'>Thực hiện</th><th style='{_CSS_TD}'>Thời điểm trong video</th></tr>")
+             f"<th style='{_CSS_TD}'>Thực hiện</th><th style='{_CSS_TD}'>Thời điểm trong video · thời lượng</th></tr>")
     for a in scores["activities"]:
-        t = tl.get(a["activity"], {})
-        when = f"{t.get('start', '')}–{t.get('end', '')}" if t.get("found") and t.get("start") else ("không thấy trong buổi" if t and not t.get("found") else "")
+        when = _range_text(ranges.get(a["activity"]), names.act.get(a["activity"], {}).get("duration", ""))
         cnt = a["counts"]
         detail = ", ".join(f"{STATUS_LABEL[k].lower()} {cnt[k]}" for k in ("FF", "PF", "NF", "NE") if cnt.get(k))
         p.append(f"<tr><td style='{_CSS_TD}'>{e(names.act_name(a['activity']))}</td>"
@@ -236,6 +286,7 @@ def mentor_email_html(result: dict, scores: dict, meta: dict, names: Names) -> s
 
 
 def mentor_email_text(result: dict, scores: dict, meta: dict, names: Names) -> str:
+    ranges = activity_ranges(result, names, meta.get("duration_sec"))
     L = [f"Chào {meta.get('mentor_name') or 'thầy/cô'},", ""]
     if scores["classification"] == "THIEU_DU_LIEU":
         L.append("Chưa đủ dữ liệu để tính tỷ lệ tuân thủ toàn ca: " + "; ".join(scores["insufficient_reasons"]))
@@ -245,7 +296,8 @@ def mentor_email_text(result: dict, scores: dict, meta: dict, names: Names) -> s
         L += ["", names.humanize(result["summary_for_mentor"])]
     L += ["", "5 hoạt động:"]
     for a in scores["activities"]:
-        L.append(f"- {names.act_name(a['activity'])} ({a['weight']}%): {pct(a['score'])}")
+        when = _range_text(ranges.get(a["activity"]), names.act.get(a["activity"], {}).get("duration", ""))
+        L.append(f"- {names.act_name(a['activity'])} ({a['weight']}%): {pct(a['score'])} — {when}")
     L += ["", "Điều đã làm tốt:"]
     for s in (result.get("strengths") or [])[:2]:
         L.append(f"- {names.step(s.get('criterion_id'), s.get('step_name', ''))}: {names.humanize(s.get('description', ''))}")
@@ -299,6 +351,8 @@ def detail_html(result: dict, scores: dict, meta: dict, names: Names, run_info: 
              f"<li>Độ phủ: {e(COVERAGE_LABEL.get(dq.get('transcript_coverage'), str(dq.get('transcript_coverage'))))}</li>"
              f"<li>Độ chắc gán vai: {e(str(dq.get('speaker_confidence')))}</li>"
              "<li>Gán vai: " + e("; ".join(f"{m.get('label')} → {m.get('role')}" for m in dq.get("speaker_mapping") or [])) + "</li>")
+    for w in run_info.get("transcript_warnings") or []:  # cảnh báo từ bước đọc transcript (vd tự đổi nhãn vai STT)
+        p.append(f"<li>Transcript: {e(w)}</li>")
     for it in dq.get("issues") or []:
         p.append(f"<li>{e(it)}</li>")
     p.append("</ul>")

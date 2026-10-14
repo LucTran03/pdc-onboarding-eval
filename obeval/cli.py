@@ -66,8 +66,10 @@ def cmd_rescore(args) -> int:
 
 
 def _rebuild_dashboard(out_root: Path) -> Path:
-    rows = dashboard.collect(out_root, report.Names(prompt.load_criteria()))
-    page = dashboard.build_html(rows, prompt.load_criteria()["activities"], config.GOOD_THRESHOLD)
+    crit = prompt.load_criteria()
+    rows = dashboard.collect(out_root, report.Names(crit))
+    dashboard.publish_details(out_root)
+    page = dashboard.build_html(rows, crit["activities"], config.GOOD_THRESHOLD, crit["criteria"])
     out = out_root / "dashboard.html"
     out.write_text(page, encoding="utf-8")
     print(f"Bảng điều khiển: {out} ({len(rows)} ca)")
@@ -106,6 +108,13 @@ def cmd_compare(args) -> int:
 def cmd_template(args) -> int:
     cmp_mod.write_template(Path(args.out), prompt.load_criteria())
     print(f"Đã tạo phiếu chấm tay: {args.out}")
+    return 0
+
+
+def cmd_push_db(args) -> int:
+    from . import db
+    print(json.dumps(db.push(Path(args.case_dir), args.booking_id, publish=args.publish,
+                             with_audit=args.audit), ensure_ascii=False))
     return 0
 
 
@@ -166,6 +175,13 @@ def main(argv=None) -> int:
     p = sub.add_parser("human-template", help="Tạo phiếu chấm tay CSV cho học thuật")
     p.add_argument("out")
     p.set_defaults(func=cmd_template)
+
+    p = sub.add_parser("push-db", help="Ghi kết quả một ca lên DB đặt lịch (OBEVAL_DB_URL / OBEVAL_DB_KEY)")
+    p.add_argument("case_dir")
+    p.add_argument("--booking-id", required=True, help="bookings.id của buổi onboarding")
+    p.add_argument("--publish", action="store_true", help="Cho Mentor xem ngay (published_at = now)")
+    p.add_argument("--audit", action="store_true", help="Đẩy cả bản đầy đủ có trích dẫn (bảng audit, chỉ admin)")
+    p.set_defaults(func=cmd_push_db)
 
     p = sub.add_parser("check-vertex", help="Kiểm model có dùng được trên Vertex công ty (chỉ đọc metadata)")
     p.add_argument("--model", default=config.DEFAULT_MODEL)

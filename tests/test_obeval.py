@@ -101,6 +101,56 @@ class TestTranscript(unittest.TestCase):
         self.assertEqual(tr.source_format, "json_segments")
         self.assertEqual(tr.segments[0].speaker, "SPEAKER_00")
 
+    def test_stt_diarized_sample(self):
+        """Đầu ra STT chia người nói (SpeechToText `PIPELINE=diarized`), mẫu ẩn danh trong tests/fixtures."""
+        tr = transcript.load(TOOL / "tests" / "fixtures" / "stt_diarized_sample.json")
+        self.assertEqual(tr.source_format, "stt_diarized")
+        self.assertEqual(tr.mentor_label, "Mentor")
+        self.assertEqual([s.speaker for s in tr.segments],
+                         ["Mentor", "Học sinh", "Phụ huynh", "Mentor", "[VIDEO]", "Mentor"])
+        self.assertEqual(tr.segments[4].start, 620.0)
+        self.assertEqual(tr.duration_sec, 2710.0)
+        self.assertNotIn("0912", transcript.render(tr))
+        self.assertIn("[00:00:07] Học sinh: Dạ con nghe rõ ạ.", transcript.render(tr))
+        self.assertTrue(any("tự gán" in w for w in tr.warnings))
+        meta = prompt.session_meta(tr, {"mentor_label": tr.mentor_label})
+        self.assertIn("Nhãn của Mentor (do hệ thống cung cấp): Mentor", meta)
+
+    def test_stt_diarized_flags(self):
+        data = json.loads((TOOL / "tests" / "fixtures" / "stt_diarized_sample.json").read_text(encoding="utf-8"))
+        data["session_flag"] = "insufficient"
+        tr = self._load(json.dumps(data), ".json")
+        self.assertTrue(any("thiếu đối thoại" in w for w in tr.warnings))
+        fallback = {"transcript": "Chào con", "segments": [{"start_sec": 1.0, "end_sec": 2.0, "text": "Chào con"}],
+                    "pipeline": "legacy-fallback", "duration_sec": 2.0}
+        tr = self._load(json.dumps(fallback), ".json")
+        self.assertEqual(tr.source_format, "stt_legacy_fallback")
+        self.assertIsNone(tr.mentor_label)
+        self.assertEqual(tr.segments[0].speaker, "")
+
+    def test_stt_diarized_swapped_roles(self):
+        """Onboarding: phụ huynh nói riêng với Mentor lâu nên STT v1 gán phụ huynh là "student", con là "parent"."""
+        child = ["Dạ con tên là An ạ.", "Con thích vẽ lắm cô ơi.", "Dạ con học lớp 4 rồi.",
+                 "Con sợ bị mắng lắm.", "Con muốn đi đá bóng.", "Con thấy vui ạ."]
+        parent = ["Theo chị thì bé nhà chị không chịu học.", "Nó cứ cầm điện thoại suốt em ạ.",
+                  "Chị cũng đã thử nhiều cách rồi.", "Bạn ấy nói vậy thôi chứ chị không tin lắm."] * 3
+        segs = [{"start_sec": i * 10.0, "end_sec": i * 10.0 + 5, "text": t, "role": "parent"} for i, t in enumerate(child)]
+        segs += [{"start_sec": 1000 + i * 10.0, "end_sec": 1000 + i * 10.0 + 5, "text": t, "role": "student"}
+                 for i, t in enumerate(parent)]
+        segs.append({"start_sec": 0.5, "end_sec": 1.0, "text": "Cô chào con nhé.", "role": "mentor"})
+        tr = self._load(json.dumps({"segments": segs, "roles": {"0": "mentor"}, "session_flag": "ok",
+                                    "pipeline": "diarized-v1"}), ".json")
+        by_text = {s.text: s.speaker for s in tr.segments}
+        self.assertEqual(by_text["Dạ con học lớp 4 rồi."], "Học sinh")
+        self.assertEqual(by_text["Chị cũng đã thử nhiều cách rồi."], "Phụ huynh")
+        self.assertTrue(any("đổi chỗ nhãn" in w for w in tr.warnings))
+        # nhãn đúng sẵn thì giữ nguyên
+        for s in segs:
+            s["role"] = {"parent": "student", "student": "parent"}.get(s["role"], s["role"])
+        tr = self._load(json.dumps({"segments": segs, "roles": {}, "pipeline": "diarized-v1"}), ".json")
+        self.assertEqual({s.text: s.speaker for s in tr.segments}["Dạ con học lớp 4 rồi."], "Học sinh")
+        self.assertFalse(any("đổi chỗ nhãn" in w for w in tr.warnings))
+
     def test_db_row_minus_one(self):
         row = {"id": "x", "transcript": [{"text": "Chào con", "start_time": -1, "end_time": -1, "word_count": 2}]}
         tr = self._load(json.dumps(row), ".json")
@@ -256,6 +306,53 @@ class TestReports(unittest.TestCase):
     def test_detail_renders(self):
         h = report.detail_html(self.res, self.sc, self.meta, NAMES, {"ai_issues": ["x"], "quote_stats": {}, "usage": {}})
         self.assertIn("OB37", h)
+
+
+class TestActivityRanges(unittest.TestCase):
+    def test_fill_missing_times(self):
+        """Model chỉ trả mốc bắt đầu hoạt động 1 (ca thật 12/10) → bù từ trích dẫn và mốc kế tiếp."""
+        crit = [{"id": c["id"], "status": "NA", "evidence": []} for c in CRIT["criteria"]]
+        by = {c["id"]: c for c in crit}
+        for cid, ts in (("OB06", "00:07:10"), ("OB09", "00:13:00"), ("OB12", "00:20:00"),
+                        ("OB24", "00:41:00"), ("OB29", "00:50:00"), ("OB36", "01:30:00")):
+            by[cid].update(status="FF", evidence=[{"timestamp": ts, "quote": "x", "verified": True}])
+        result = {"criteria": crit, "activities_timeline": [{"activity": 1, "found": True, "start": "00:00:31"}]}
+        r = report.activity_ranges(result, NAMES, duration=7683.0)
+        self.assertEqual((r[1]["start"], r[1]["end"], r[1]["estimated"]), (31.0, 430.0, False))
+        self.assertEqual((r[3]["start"], r[3]["end"], r[3]["estimated"]), (780.0, 2460.0, True))
+        self.assertEqual(r[5]["end"], 7683.0)
+        self.assertEqual(report._range_text(r[1], "5 phút"), "00:00:31–00:07:10 · 7 phút (chuẩn 5 phút)")
+        self.assertTrue(report._range_text(r[3]).startswith("khoảng 00:13:00–00:41:00"))
+        self.assertTrue(report._range_text(r[5], "20–25 phút, cần thống nhất lại").endswith("(chuẩn 20–25 phút)"))
+        result["activities_timeline"].append({"activity": 2, "found": False})
+        by["OB06"].update(status="NA", evidence=[])
+        self.assertEqual(report._range_text(report.activity_ranges(result, NAMES).get(2)), "không thấy trong buổi")
+
+
+class TestDbRows(unittest.TestCase):
+    def test_build_rows(self):
+        from obeval import db
+        res, _ = validate.normalize(fake_raw())
+        res, _, _ = verify.verify(res, make_tr())
+        sc = score.compute(res, CRIT, good_threshold=0.80)
+        doc = {"meta": {"session_date": "2026-10-11", "duration_sec": 2700.4}, "scores": sc,
+               "run": {"model": "gemini-2.5-pro", "finished_at": "2026-10-12T13:59:00"}, **res}
+        rows = db.build_rows(doc, "00000000-0000-0000-0000-000000000001", NAMES, publish=True)
+        ev = rows["evaluation"]
+        self.assertEqual((ev["status"], ev["duration_sec"], ev["threshold"]), ("done", 2700, 0.80))
+        self.assertNotIn("is_test", ev)
+        self.assertIsNotNone(ev["published_at"])
+        self.assertEqual(len(rows["steps"]), 37)
+        rep = ev["mentor_report"]
+        self.assertEqual({"OB08", "OB09"} <= {x["criterion_id"] for x in rep["not_followed"]}, True)
+        self.assertEqual(rep["not_followed"][0]["status"], "NF")  # chưa làm trước, làm một phần sau
+        self.assertEqual(rep["improvements"][0]["step"], NAMES.step("OB08"))
+        blob = json.dumps(rep, ensure_ascii=False)
+        self.assertNotIn("quote", blob)  # bản cho Mentor không mang trích dẫn lời gia đình
+        self.assertNotIn("Con khỏe không?", blob)
+        self.assertNotIn("result", ev)  # bản đầy đủ chỉ nằm ở audit
+        self.assertIn("criteria", rows["audit"]["result"])
+        self.assertFalse(db.build_rows(doc, "x", NAMES)["evaluation"]["published_at"])
 
 
 class TestCompare(unittest.TestCase):
@@ -417,6 +514,31 @@ class TestReviewRegressions(unittest.TestCase):
         for leak in ("Khang", "Nguyen", "Minh Anh", "Thay"):
             self.assertNotIn(leak, blob)
         self.assertTrue(row["case_key"].startswith("ca-"))
+
+    def test_dashboard_low_case_link_no_folder_name(self):
+        """Danh sách ca dưới chuẩn link tới bản chép chi-tiet/<mã băm>.html, không lộ tên thư mục ca."""
+        res, _ = validate.normalize(fake_raw())
+        res, _, _ = verify.verify(res, make_tr())
+        sc = score.compute(res, CRIT)
+        folder = "2026-10-09_Nguyen-Van-An_Mentor-Khang"
+        with tempfile.TemporaryDirectory() as d:
+            case = Path(d) / folder
+            case.mkdir()
+            (case / "detail.html").write_text("<p>chi tiết</p>", encoding="utf-8")
+            row = dashboard.make_row(folder, {"detail_url": "javascript:alert(1)"}, res, sc, "done", NAMES)
+            (case / "dashboard_row.json").write_text(json.dumps(row), encoding="utf-8")
+            self.assertEqual(dashboard.publish_details(Path(d)), 1)
+            self.assertTrue((Path(d) / "chi-tiet" / f"{row['case_key']}.html").exists())
+            rows = dashboard.collect(Path(d), NAMES)
+        self.assertIsNone(rows[0]["detail_url"])  # chỉ nhận https
+        page = dashboard.build_html(rows, CRIT["activities"], 0.80, CRIT["criteria"])
+        for leak in ("Khang", "Nguyen"):
+            self.assertNotIn(leak, page)
+        self.assertIn("Ca dưới chuẩn", page)
+        self.assertIn("chi-tiet/", page)
+        self.assertIn(CRIT["criteria"][0]["requirements"][0], page)  # "cần làm" lấy từ danh mục
+        self.assertEqual(dashboard.make_row("x", {"detail_url": "https://cc.teencare.vn/ca/1"}, None, None, "done", NAMES)
+                         ["detail_url"], "https://cc.teencare.vn/ca/1")
 
     def test_I4_no_cross_speaker_or_one_word(self):
         qi = verify.QuoteIndex(self._tr([(1, "SPEAKER_00", "con nhớ đăng ký ngay"), (5, "SPEAKER_01", "không ạ em từ chối")]))
