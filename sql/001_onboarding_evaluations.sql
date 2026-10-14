@@ -2,7 +2,7 @@
 -- Chạy trên DB DEV trước. Lên prod phải qua PR vào TeenCareBooking (supabase/schema.sql) và chủ DB duyệt.
 --
 -- Ai đọc / ghi:
---   obeval (service role)        ghi tất cả bảng (service role bỏ qua RLS)
+--   obeval (role obeval_writer, xem 003)  ghi các bảng điều phối và kết quả, bị RLS giới hạn (không dùng service-role key)
 --   TeenCareWork (service role)  dashboard PDC + trang chi tiết, kiểm quyền ở server
 --   Mentor (authenticated)       đọc kết quả buổi của mình khi published_at != null; gửi phản hồi
 --   Admin (admin_users)          đọc tất cả

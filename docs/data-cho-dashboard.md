@@ -45,6 +45,10 @@ Mỗi buổi **một dòng**; chấm lại thì **ghi đè** (37 dòng steps đ�
 | `published_at` | timestamptz | Thời điểm cho Mentor xem (null = chưa) |
 | `email_to`, `email_sent_at` | text, timestamptz | Gửi email Mentor (chưa dùng) |
 | `error` | text | Lỗi xử lý (khi `status = error`) |
+| `recording_file_id` | text | Mã file recording trên Google Drive (cột điều phối của obeval, dashboard không cần) |
+| `recording_url` | text | Link Drive gửi cho dịch vụ chuyển giọng nói (điều phối, dashboard không cần) |
+| `run_id` | bigint | Mỗi lần bắt đầu chấm lại có `run_id` mới; tác vụ cũ bị bỏ (điều phối) |
+| `attempts` | integer | Số lần thử xử lý, mặc định 0 (điều phối) |
 | `created_at`, `updated_at` | timestamptz | |
 
 ### 3.2 `onboarding_evaluation_steps` — 37 dòng mỗi buổi (cho chart "phần hay sai")
@@ -85,6 +89,17 @@ Tên 5 hoạt động (không có bảng riêng): 1 Chào hỏi, giới thiệu 
 | `bookings` | `id`, `mentor_id`, `event_type_id`, `start_at`, `status`, `region`, `student_code` |
 | `event_types` | `id`, `name` — loại buổi; hiện chỉ chấm **"Gia sư tâm lý 1:1 Onboarding"** |
 | `mentors` | `id`, `full_name`, `email` — **không hiển thị trên dashboard chung** (yêu cầu PDC v3.0: không tên Mentor, không xếp hạng) |
+
+### 3.7 `onboarding_recording_unmatched` — recording chưa ghép được booking (**không dùng cho dashboard**)
+
+| Cột | Kiểu | Ý nghĩa |
+|---|---|---|
+| `file_id` | text, PK | Mã file recording trên Drive |
+| `file_name` | text | Tên file (**có tên / SĐT phụ huynh**) |
+| `reason` | text | `unparsable_name` (không đọc được tên file) · `no_booking` (không tìm thấy booking khớp) · `duplicate_recording` (booking đã có recording được chấm; file này không bị chấm đè, chờ người xem xét) |
+| `first_seen_at`, `last_seen_at` | timestamptz | Lần đầu / lần gần nhất obeval thấy file này |
+
+Chỉ admin đọc được; dùng để xử lý tay, không đưa lên dashboard chung. DDL: `sql/003_obeval_writer.sql`.
 
 ## 4. Cấu trúc các cột JSON
 
@@ -159,4 +174,5 @@ limit 10;
 - Điểm AI **chưa được nghiệm thu** với người chấm tay; chấm lại cùng một ca hiện còn dao động (đã thấy lệch tới 11 điểm %). Không dùng để đánh giá cá nhân Mentor.
 - Không hiển thị tên Mentor, không xếp hạng trên dashboard chung (yêu cầu PDC v3.0).
 - Bảng audit và chữ tự do trong `mentor_report` có thể chứa dữ liệu cá nhân của trẻ vị thành niên — không xuất ra file / Sheet ngoài hệ thống.
-- Đổi ngưỡng (80%) chỉ cần sửa trong truy vấn, không cần chấm lại.
+- Đổi ngưỡng (80%) chỉ cần sửa trong truy vấn, không cần chấm lại. Ngưỡng do PDC chốt, hiện tạm 0.80.
+- obeval tự động ghi DB bằng role riêng `obeval_writer` (không dùng service-role key): chỉ đọc 6 cột của `bookings` (không có tên / SĐT / email phụ huynh) và chỉ thấy buổi loại "Gia sư tâm lý 1:1 Onboarding"; DDL ở `sql/003_obeval_writer.sql`.
