@@ -9,7 +9,7 @@ Mỗi buổi onboarding (Mentor 1:1 Onboard) kết thúc thì **tự động**, 
 1. Có transcript chia người nói (Mentor / Phụ huynh / Học sinh).
 2. AI chấm theo kịch bản SEC Onboarding (37 bước, 5 hoạt động), ra **% follow kịch bản**.
 3. Mentor nhận báo cáo ngắn ngay sau ca: % follow, phần chưa follow, cần cải thiện gì cho lần sau (hiện trong trang Lịch đã đặt của TeenCareBooking, không gửi email).
-4. PDC xem dashboard tổng (Data Analyst dựng, đọc thẳng từ DB, không thuộc pipeline): tổng số ca, % follow, % ca đạt / không đạt (ngưỡng 80%), danh sách ca dưới chuẩn kèm link, các phần hay sai nhất.
+4. PDC xem dashboard tổng (Data Analyst dựng, đọc thẳng từ DB, không thuộc pipeline): tổng số ca, % follow, % ca đạt / không đạt (ngưỡng đạt do PDC chốt, hiện tạm 80%), danh sách ca dưới chuẩn kèm link, các phần hay sai nhất.
 
 ## 2. Đã làm được
 
@@ -60,55 +60,43 @@ Các đường vào khác của session-on-trigger: `/webhook` (DB CRMxLMS bắn
 
 ```
 Recording onboarding (Drive)
-  → Apps Script: nhận tên "…1_1 Onboarding…" → chuyển sang folder Onboarding riêng
-       → gọi thẳng session-on-trigger 
-  → session-on-trigger  POST /v1/onboarding/drive-webhook (mới)
+  → Apps Script: nhận tên "…1_1 Onboarding…" → chuyển sang folder Onboarding riêng → gọi obeval
+  → obeval [Cloud Run]  POST /v1/recordings
        mã TC + giờ trong tên file → tìm booking onboarding trong DB đặt lịch → booking_id
-  → Cloud Tasks → session-data-worker  POST /v2/tasks/onboarding (mới, mỏng)
-  → temp-transcript  /beta/transcript  {session_id = booking_id, profile = "onboarding"}
-  → STT: job này chạy pipeline chia người nói + luật gán vai onboarding
-       → gs://teenup-transcripts/transcripts/<booking_id>.json   (đường dẫn như cũ)
-  → session-data-worker thấy xong → gọi obeval
-  → obeval [Cloud Run]: đọc thẳng JSON trên GCS → chấm → ghi DB đặt lịch (điểm cuối của pipeline)
+  → obeval gọi temp-transcript  /beta/transcript  {session_id = booking_id, profile = "onboarding"}
+  → STT: job onboarding luôn chạy pipeline chia người nói
+       → gs://teenup-transcripts/transcripts/onboarding/<booking_id>.json   (xoá sau 90 ngày)
+  → obeval hỏi lại 5 phút/lần qua Cloud Tasks (tối đa 3 giờ) → đọc JSON → chấm
+  → ghi DB đặt lịch bằng role obeval_writer (điểm cuối của pipeline)
 
-DB đặt lịch ──► báo cáo Mentor trong TeenCareBooking
+DB đặt lịch ──► báo cáo Mentor trong TeenCareBooking (chỉ khi published_at có giá trị)
            └─► dashboard PDC (Data Analyst dựng, đọc thẳng DB)
 ```
 
 ## 4. Kế hoạch chi tiết
 
-### Bước 1 — Apps Script: tách recording onboarding sang folder riêng và gọi session-on-trigger
+### Bước 1 — Apps Script: tách recording onboarding sang folder riêng và gọi obeval
 
 | Việc | Chi tiết |
 |---|---|
 | Nhận diện buổi onboarding | Lọc tên chứa `1_1 Onboarding` (tên đang dùng: "Gia sư tâm lý 1:1 Onboarding"). Chốt với vận hành còn tên nào khác không |
 | Chuyển file | Di chuyển sang folder Drive **Onboarding** riêng, không để lẫn với recording hàng tuần |
 | Phân quyền folder | Chỉ service account của pipeline và nhóm PDC được đọc. Đây là video có trẻ vị thành niên |
-| Gọi session-on-trigger | Ngay sau khi chuyển file, Apps Script gọi thẳng `POST /v1/onboarding/drive-webhook` với thông tin file (`id`, `name`, `webViewLink`, `createdTime) |
-| Xác thực | Endpoint gọi từ Internet nên kèm khoá bí mật trong header, lưu ở Script Properties (không ghi trong code). Endpoint hàng tuần hiện chưa kiểm khoá; nhánh onboarding nên có ngay từ đầu |
-| Gọi lỗi | session-on-trigger không trả 2xx thì Apps Script ghi lại file đó và gọi lại ở lượt chạy sau, không bỏ qua |
+| Gọi obeval | Ngay sau khi chuyển file, Apps Script gọi thẳng `POST /v1/recordings` của obeval với thông tin file (`id`, `name`, `webViewLink`, `createdTime`) |
+| Xác thực | Endpoint gọi từ Internet nên kèm khoá bí mật trong header, lưu ở Script Properties (không ghi trong code) |
+| Gọi lỗi | obeval không trả 2xx thì Apps Script ghi lại file đó và gọi lại ở lượt chạy sau, không bỏ qua |
 
-**Xong khi:** 1 tuần recording onboarding thật đều vào đúng folder và đều tới được session-on-trigger.
+**Xong khi:** 1 tuần recording onboarding thật đều vào đúng folder và đều tới được obeval.
 
-### Bước 2 — Pipeline onboarding (session-on-trigger, session-data-worker, temp-transcript, STT)
+### Bước 2 — Pipeline onboarding (temp-transcript, STT)
 
 Nguyên tắc: **dùng lại hạ tầng có sẵn** (Cloud Tasks, cơ chế thử lại, callback, đường dẫn GCS), **không đụng luồng 1:1 hàng tuần** đang chạy cho khoảng 120 buổi/ngày. Mọi thay đổi là endpoint mới, hoặc tham số mới mà giá trị mặc định giữ nguyên hành vi cũ.
 
-**2.1. session-on-trigger**
-- Endpoint mới `POST /v1/onboarding/drive-webhook`. Dùng lại hàm đọc mã TC + giờ từ tên file và cửa sổ khớp 90 phút đã có.
-- Tra `bookings` trong **DB đặt lịch** theo `student_code` + `start_at` + loại buổi onboarding. Cần thêm cấu hình và secret cho DB đặt lịch (service hiện chỉ có key CRMxLMS và TeenCareParent).
-- Không khớp được thì **ghi rõ lý do và đưa vào danh sách xử lý tay**, không bỏ im lặng như nhánh hàng tuần từng gặp.
-- Tạo Cloud Task tới session-data-worker, tên task theo `booking_id` để chống trùng.
-
-**2.2. session-data-worker**
-- Endpoint mới `POST /v2/tasks/onboarding` nhận `booking_id` + link Drive.
-- Gọi temp-transcript với `session_id = booking_id`, `profile = onboarding`; chưa xong thì hẹn chạy lại (dùng lại cơ chế poll của phase1).
-- Xong thì gọi obeval với đường dẫn `transcripts/<booking_id>.json`. **Không** ghi `transcripts` / `sessions`, **không** sinh mentor report, QA, VPP hay parent coach.
-- Phương án gọn hơn để cân nhắc: bỏ bước này, session-on-trigger gửi thẳng task tới obeval và obeval tự gọi temp-transcript. Ít đụng vào service đang chạy prod hơn, nhưng lệch khỏi quy ước "mọi xử lý AI sau buổi đi qua session-data-worker".
+Không đi qua session-on-trigger và session-data-worker: obeval tự ghép booking và tự gọi temp-transcript (ít sửa service prod, không phụ thuộc lịch Nhật Anh).
 
 **2.3. temp-transcript**
 - Nhận thêm tham số `profile` (mặc định rỗng = như cũ), chuyển xuống STT khi gọi `/v1/transcribe`.
-- Không cần đổi chỗ lưu: STT vẫn ghi `transcripts/<session_id>.json`, với onboarding thì `session_id` là `booking_id`. obeval đọc thẳng file JSON này (có mốc giờ và vai), không dùng bản chữ temp-transcript trả về.
+- Không cần đổi chỗ lưu: STT ghi `transcripts/onboarding/<session_id>.json`, với onboarding thì `session_id` là `booking_id`. obeval đọc thẳng file JSON này (có mốc giờ và vai), không dùng bản chữ temp-transcript trả về.
 
 **2.4. STT (server GPU) — phải build thêm luồng xử lý cho onboarding**
 
@@ -121,7 +109,7 @@ Nguyên tắc: **dùng lại hạ tầng có sẵn** (Cloud Tasks, cơ chế th�
 | RAM / GPU | Đo 13/10: RAM 7,5 GB đã dùng 3,9 GB, **swap dùng 5,4/8 GB**; GPU 4,9/8 GB. Worker STT giới hạn 5 GB, đang dùng 3,8 GB. Job onboarding không thêm model mới (dùng chung pipeline đang chạy), nhưng server đã phải swap nhiều — liên quan đề xuất nâng cấp server |
 | Xoá file tạm | Giữ quy tắc hiện tại: xoá mp3 sau khi transcribe; transcript onboarding giữ có thời hạn (đề xuất 90 ngày) |
 
-**Xong khi:** recording onboarding thật đi hết từ Drive tới `transcripts/<booking_id>.json` có vai người nói, không cần thao tác tay; luồng 1:1 hàng tuần không đổi (so số buổi xử lý và thời gian chờ trước/sau).
+**Xong khi:** recording onboarding thật đi hết từ Drive tới `transcripts/onboarding/<booking_id>.json` có vai người nói, không cần thao tác tay; luồng 1:1 hàng tuần không đổi (so số buổi xử lý và thời gian chờ trước/sau).
 
 ### Bước 3 — Triển khai bộ chấm (obeval) và nối vào pipeline
 
@@ -132,8 +120,15 @@ Nguyên tắc: **dùng lại hạ tầng có sẵn** (Cloud Tasks, cơ chế th�
 
 | Việc | Chi tiết |
 |---|---|
-| Đóng gói | Dockerfile + endpoint `POST /evaluate {booking_id, transcript_uri}` bọc quanh bộ chấm và lệnh ghi DB đã có |
-| Quyền | Service account riêng: Vertex AI User, đọc `gs://teenup-transcripts/transcripts/` |
+| Đóng gói | Dockerfile, bọc quanh bộ chấm và lệnh ghi DB đã có |
+| Endpoint nhận file | `POST /v1/recordings` (công khai): Apps Script gọi với id, tên, link file Drive, kèm header `X-Obeval-Token`. obeval đọc mã TC + giờ trong tên file, tìm booking loại "Gia sư tâm lý 1:1 Onboarding" lệch ≤ 90 phút (bỏ booking đã huỷ) |
+| Không ghép được | Lưu vào bảng `onboarding_recording_unmatched` để xử lý tay, không bỏ im lặng |
+| Chống chấm trùng | Bảng `onboarding_evaluations` có 1 dòng cho mỗi booking (`booking_id` là khoá chính). Apps Script gửi file thì obeval kiểm dòng này: cùng file đã xong / không đủ dữ liệu thì bỏ qua (`already_done`); cùng file đang chạy và cập nhật trong 30 phút thì bỏ qua (`in_progress`). Chỉ khi khác mới mở lần chạy mới với `run_id` mới. Mỗi Cloud Task mang `run_id`; task có `run_id` không còn khớp dòng (lần chạy cũ) bị bỏ qua. Tên task `adv-<booking>-<run_id>-<attempt>` chỉ để Cloud Tasks không tạo trùng cùng một lượt hỏi lại |
+| Hỏi lại kết quả STT | Endpoint nội bộ `POST /v1/tasks/advance`, Cloud Tasks gọi 5 phút/lần, tối đa 36 lần (3 giờ). Mỗi lần gọi temp-transcript; khi có `transcripts/onboarding/<booking_id>.json` thì chấm và ghi DB |
+| Quyền | Service account riêng: Vertex AI User |
+| Quyền GCS | Chỉ đọc `transcripts/onboarding/` (IAM condition); lifecycle xoá sau 90 ngày |
+| Quyền DB | Role `obeval_writer` chỉ đọc 6 cột `bookings` và ghi 5 bảng kết quả, không dùng service-role key; RLS bật cho mọi bảng mới, Mentor chỉ thấy buổi của mình |
+| Ngưỡng đạt | PDC chốt, đặt bằng `OBEVAL_GOOD_THRESHOLD` (hiện tạm 80%) |
 | Bí mật | Key DB đặt lịch đặt trong Secret Manager, không nằm trong code |
 | Ghi DB **prod** | Tạo 5 bảng trên DB đặt lịch prod qua PR vào TeenCareBooking, chủ DB duyệt (hiện mới có trên dev) |
 | Báo cáo trong TeenCareBooking | Merge nhánh `tanh/dev/onboarding-ai-report` |
@@ -142,13 +137,22 @@ Nguyên tắc: **dùng lại hạ tầng có sẵn** (Cloud Tasks, cơ chế th�
 
 
 
+## Cổng chất lượng trước khi Mentor thấy kết quả
+
+`published_at` để trống (Mentor không thấy gì) cho tới khi đạt cả 3 điều kiện:
+1. 5 buổi onboarding thật được PDC chấm tay.
+2. Đạt 5 chỉ tiêu nghiệm thu trên 5 buổi đó: trùng phân loại ≥ 85%, lệch tỷ lệ toàn ca ≤ 5 điểm %, tìm đúng lỗi ≥ 85%, logic liên kết ≥ 80%, NF có dẫn chứng 100%.
+3. Chấm lại cùng một buổi 3 lần, % follow lệch ≤ 5 điểm % (hiện đo được 11 điểm trên một ca — phải giảm trước).
+Bắt đầu ngay tuần 1, song song với việc xây pipeline. Qua cổng thì chạy `python run.py publish` và đặt `OBEVAL_PUBLISH=true`.
+
 ## 5. Lộ trình đề xuất
 
 | Tuần | Việc | Ghi chú |
 |---|---|---|
-| 1 | Bước 1 (Apps Script) + bắt đầu Bước 2.4 (STT) | Phụ thuộc lịch Nhật Anh |
-| 2 | Bước 2.1–2.3 + hoàn thiện STT | Thử trên môi trường dev / staging |
+| 1 | Bước 1 (Apps Script) + bắt đầu Bước 2.4 (STT) + Cổng chất lượng: xin 5 buổi PDC chấm tay, đo dao động | Phụ thuộc lịch Nhật Anh |
+| 2 | Bước 2.3 + hoàn thiện STT | Thử trên môi trường dev / staging |
 | 3 | Bước 3 + chạy **chế độ im lặng** | Chấm và lưu, Mentor chưa thấy (`published_at` để trống); PDC đối chiếu với chấm tay |
+| 4 | Bật hiển thị cho Mentor — chỉ khi qua cổng chất lượng | |
 
 Thời gian là ước lượng, chưa tính thời gian chờ duyệt PR / quyền GCP.
 
