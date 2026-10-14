@@ -9,6 +9,8 @@ FLAG_IDS = [f"F{i:02d}" for i in range(1, 11)]
 SEVERITIES = ("high", "medium", "low")
 CRIT_STATUSES = {"FF", "PF", "NF", "NA", "NE"}
 LINK_STATUSES = {"DAT", "DAT_MOT_PHAN", "CHUA_DAT", "KHONG_DU_DU_LIEU"}
+# Mức đạt mục tiêu cấu phần phải khớp trạng thái (trạng thái là thứ tính điểm).
+GOAL_BY_STATUS = {"FF": "yes", "PF": "partial", "NF": "no", "NA": "unknown", "NE": "unknown"}
 
 
 def schema_errors(data: dict, schema: dict) -> list[str]:
@@ -57,12 +59,18 @@ def normalize(data: dict) -> tuple[dict, list[str]]:
         c.setdefault("rationale", "")
         c.setdefault("evidence", [])
         c.setdefault("missing_elements", [])
+        c.setdefault("goal_reason", "")
+        expected = GOAL_BY_STATUS[c["status"]]
+        if c.get("goal_achieved") != expected:
+            issues.append(f"{cid}: goal_achieved {c.get('goal_achieved')!r} không khớp trạng thái {c['status']} → {expected}")
+            c["goal_achieved"] = expected
         seen[cid] = c
     for cid in OB_IDS:
         if cid not in seen:
             issues.append(f"{cid}: model không trả về → NE")
             seen[cid] = {"id": cid, "status": "NE", "rationale": "AI không trả về tiêu chí này.",
-                         "evidence": [], "missing_elements": [], "ai_missing": True}
+                         "evidence": [], "missing_elements": [], "goal_reason": "", "goal_achieved": "unknown",
+                         "ai_missing": True}
     d["criteria"] = [seen[cid] for cid in OB_IDS]
 
     lseen: dict[str, dict] = {}

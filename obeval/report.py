@@ -371,7 +371,8 @@ def detail_html(result: dict, scores: dict, meta: dict, names: Names, run_info: 
                  if len(runs) > 1 else "")
         p.append(f"<tr><td>{c['id']}</td><td>{names.act_of(c['id'])}</td><td>{e(names.step(c['id']))}</td>"
                  f"<td style='color:{STATUS_COLOR[st]}'><b>{STATUS_LABEL[st]}</b>{changed}{votes}</td>"
-                 f"<td>{e(c.get('rationale', ''))}{'<br><i>Thứ tự: ' + e(c['sequence_issue']) + '</i>' if c.get('sequence_issue') else ''}</td>"
+                 f"<td>{'<b>Mục tiêu:</b> ' + e(c['goal_reason']) + '<br>' if c.get('goal_reason') else ''}"
+                 f"{e(c.get('rationale', ''))}{'<br><i>Thứ tự: ' + e(c['sequence_issue']) + '</i>' if c.get('sequence_issue') else ''}</td>"
                  f"<td>{e('; '.join(c.get('missing_elements') or []))}</td><td>{evs}</td></tr>")
     p.append("</table>")
 

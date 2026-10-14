@@ -279,6 +279,7 @@ def verify(result: dict, tr: Transcript) -> tuple[dict, list[str], dict]:
                 issues.append(f"{c['id']}: trạng thái {c['status']} nhưng không có bằng chứng → NE")
                 c["downgraded"] = "no_evidence"
             c["status_model"], c["status"] = c["status"], "NE"
+            c["goal_achieved"] = "unknown"
 
     for lk in result["links"]:
         _check(lk)
