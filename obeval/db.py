@@ -1,18 +1,11 @@
-"""Ghi kết quả một ca lên DB đặt lịch (bảng onboarding_evaluations*, xem sql/001_onboarding_evaluations.sql).
+"""Dựng các dòng ghi DB đặt lịch (bảng onboarding_evaluations*, xem sql/001 và sql/003) từ result.json.
 
-Khoá là `bookings.id` (buổi onboarding chỉ tồn tại trong DB đặt lịch). Ghi qua Supabase REST bằng service key:
-  OBEVAL_DB_URL=https://<ref>.supabase.co  OBEVAL_DB_KEY=<service / secret key>
-
-`mentor_report` là bản NGẮN cho Mentor xem trong TeenCareBooking: % follow, phần chưa follow, cần cải thiện gì.
-Không có trường trích dẫn (chỉ mốc giờ), nhưng phần chữ AI viết (lý do, câu nói mẫu) vẫn có thể nhắc tên / lời gia đình —
-Mentor chỉ đọc được buổi của mình (RLS). Bản đầy đủ có trích dẫn nằm ở bảng audit (chỉ admin), mặc định không đẩy.
+Ghi thật đi qua `store.Store` (role `obeval_writer`, OBEVAL_DB_DSN) — không dùng service-role key.
+`mentor_report` là bản NGẮN cho Mentor xem trong TeenCareBooking; bản đầy đủ có trích dẫn nằm ở bảng audit (chỉ admin).
 """
 from __future__ import annotations
 
 import json
-import os
-import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -98,36 +91,10 @@ def build_rows(doc: dict, booking_id: str, names: Names, *, publish: bool = Fals
     return {"evaluation": evaluation, "steps": steps, "audit": audit}
 
 
-class Rest:
-    def __init__(self, url: str, key: str):
-        self.base = url.rstrip("/") + "/rest/v1/"
-        self.headers = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"}
-
-    def call(self, method: str, path: str, body=None, prefer: str = "return=minimal"):
-        data = json.dumps(body, ensure_ascii=False).encode("utf-8") if body is not None else None
-        req = urllib.request.Request(self.base + path, data=data, method=method, headers={**self.headers, "Prefer": prefer})
-        try:
-            with urllib.request.urlopen(req, timeout=60) as r:
-                raw = r.read()
-                return json.loads(raw) if raw else None
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(f"{method} {path}: HTTP {exc.code} {exc.read()[:300]!r}") from None
-
-
-def push(case_dir: Path, booking_id: str, *, publish: bool = False, with_audit: bool = False,
-         url: str | None = None, key: str | None = None) -> dict:
-    url = url or os.environ.get("OBEVAL_DB_URL")
-    key = key or os.environ.get("OBEVAL_DB_KEY")
-    if not url or not key:
-        raise SystemExit("Thiếu OBEVAL_DB_URL / OBEVAL_DB_KEY")
+def push(case_dir: Path, booking_id: str, store, *, publish: bool = False) -> dict:
+    """Ghi một ca đã chấm (thư mục có result.json) cho booking_id."""
     doc = json.loads((Path(case_dir) / "result.json").read_text(encoding="utf-8"))
     rows = build_rows(doc, booking_id, Names(prompt.load_criteria()), publish=publish)
-    api = Rest(url, key)
-    upsert = "resolution=merge-duplicates,return=minimal"
-    api.call("POST", "onboarding_evaluations?on_conflict=booking_id", rows["evaluation"], prefer=upsert)
-    api.call("DELETE", f"onboarding_evaluation_steps?booking_id=eq.{booking_id}")  # chấm lại: thay cả 37 dòng
-    api.call("POST", "onboarding_evaluation_steps", rows["steps"])
-    if with_audit:
-        api.call("POST", "onboarding_evaluation_audit?on_conflict=booking_id", rows["audit"], prefer=upsert)
-    return {"booking_id": booking_id, "status": rows["evaluation"]["status"], "overall": rows["evaluation"]["overall"],
-            "steps": len(rows["steps"]), "audit": with_audit, "published": publish}
+    store.save_result(rows)
+    return {"booking_id": booking_id, "status": rows["evaluation"]["status"],
+            "overall": rows["evaluation"]["overall"], "steps": len(rows["steps"]), "published": publish}

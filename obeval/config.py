@@ -35,8 +35,10 @@ DEFAULT_RUNS = int(os.environ.get("OBEVAL_RUNS", "3"))
 # Bộ nhiều lần cần đa dạng thật: temperature mặc định của Gemini 2.5 + seed khác nhau mỗi lần.
 ENSEMBLE_TEMPERATURE = float(os.environ.get("OBEVAL_ENSEMBLE_TEMPERATURE", "1.0"))
 
-# Ngưỡng — v3.0 gợi ý 85%; yêu cầu nhận 12/10 chốt 80%. NE vẫn chờ PDC chốt.
+# Ngưỡng đạt do PDC chốt (hiện tạm 0.80) — đổi bằng OBEVAL_GOOD_THRESHOLD, không chấm lại.
 GOOD_THRESHOLD = float(os.environ.get("OBEVAL_GOOD_THRESHOLD", "0.80"))
+# Cổng chất lượng: false = ghi kết quả nhưng Mentor chưa thấy (published_at trống). Chỉ bật khi qua cổng.
+PUBLISH = os.environ.get("OBEVAL_PUBLISH", "false").strip().lower() == "true"
 NE_RATIO_INSUFFICIENT = float(os.environ.get("OBEVAL_NE_RATIO", "0.30"))
 
 # Phiên bản bộ tiêu chí (khớp onboarding_criteria.version, sql/002). Đổi criteria.json thì tăng giá trị này.

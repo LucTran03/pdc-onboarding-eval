@@ -194,3 +194,12 @@ def to_markdown(case: str, cmp: dict, names) -> str:
     for r in cmp["link_rows"]:
         L.append(f"| {r['id']} | {names.link.get(r['id'], {}).get('name', '')} | {r['human']} | {r['ai']} | {'✓' if r['match'] else '✗'} |")
     return "\n".join(L)
+
+
+def stability(overalls: list[float | None], limit_pp: float = 5.0) -> dict:
+    """Cổng chất lượng: chấm lại cùng một buổi, % follow lệch (max − min) không quá limit_pp điểm %."""
+    vals = [v for v in overalls if v is not None]
+    if len(vals) < 2:
+        return {"runs": len(vals), "min": None, "max": None, "spread_pp": None, "pass": False}
+    spread = round((max(vals) - min(vals)) * 100, 1)
+    return {"runs": len(vals), "min": min(vals), "max": max(vals), "spread_pp": spread, "pass": spread <= limit_pp}

@@ -354,6 +354,25 @@ class TestDbRows(unittest.TestCase):
         self.assertIn("criteria", rows["audit"]["result"])
         self.assertFalse(db.build_rows(doc, "x", NAMES)["evaluation"]["published_at"])
 
+    def test_push_goes_through_store(self):
+        from obeval import db
+
+        class FakeStore:
+            saved = None
+
+            def save_result(self, rows):
+                FakeStore.saved = rows
+
+        res, _ = validate.normalize(fake_raw())
+        sc = score.compute(res, CRIT, good_threshold=0.80)
+        doc = {"meta": {"session_date": "2026-10-11"}, "scores": sc, "run": {"model": "m"}, **res}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "result.json").write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+            out = db.push(Path(d), "b-1", FakeStore(), publish=False)
+        self.assertEqual((out["booking_id"], out["steps"], out["published"]), ("b-1", 37, False))
+        self.assertEqual(FakeStore.saved["evaluation"]["booking_id"], "b-1")
+        self.assertFalse(hasattr(db, "Rest"))  # không còn đường ghi bằng service key
+
 
 class TestCompare(unittest.TestCase):
     def test_compare_with_answer_key_shape(self):
@@ -395,6 +414,14 @@ class TestCompare(unittest.TestCase):
             p3.write_text("ma,ten_buoc,hoat_dong,trang_thai,ghi_chu\nOB01,x,1,tốt,\n", encoding="utf-8")
             with self.assertRaises(ValueError):           # giá trị lạ → báo lỗi
                 compare.load_human(p3)
+
+    def test_stability_gate(self):
+        bad = compare.stability([0.650, 0.618, 0.728])
+        self.assertEqual((bad["spread_pp"], bad["pass"]), (11.0, False))
+        good = compare.stability([0.70, 0.72, 0.73])
+        self.assertEqual((good["spread_pp"], good["pass"]), (3.0, True))
+        one = compare.stability([0.70, None])
+        self.assertEqual((one["runs"], one["spread_pp"], one["pass"]), (1, None, False))
 
 
 class TestPipelineReplay(unittest.TestCase):
@@ -758,6 +785,22 @@ class TestReviewRound2(unittest.TestCase):
         res = self._checked(fake_raw())
         page = report.mentor_email_page(res, score.compute(res, CRIT), {"case_id": "t"}, NAMES)
         self.assertIn("<meta charset='utf-8'>", page)
+
+
+class TestCliRepeat(unittest.TestCase):
+    def test_repeat_rejects_dry_run_without_calling_model(self):
+        import contextlib
+        import io
+        from unittest import mock
+
+        from obeval import cli
+
+        err = io.StringIO()
+        with mock.patch.object(pipeline, "run_case", side_effect=AssertionError("không được gọi model")) as run,                 contextlib.redirect_stderr(err):
+            code = cli.main(["repeat", "x.json", "--dry-run"])
+        self.assertEqual(code, 2)
+        run.assert_not_called()
+        self.assertIn("repeat không hỗ trợ --dry-run", err.getvalue())
 
 
 if __name__ == "__main__":

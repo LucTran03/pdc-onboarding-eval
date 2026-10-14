@@ -84,12 +84,12 @@ python run.py compare --ai data/out/<ca> --human <phiếu>.csv --out doi-chieu.m
 | `OBEVAL_SCRIPT` · `OBEVAL_OUT_ROOT` | `<data>/raw/090426_SEC_Script_Onboarding.txt` · `<data>/out` |
 | `OBEVAL_GCP_PROJECT` · `OBEVAL_GCP_LOCATION` | `tcservices2027` · `us-central1` |
 | `OBEVAL_MODEL` · `OBEVAL_RUNS` · `OBEVAL_THINKING` | `gemini-2.5-pro` · `3` · `16384` |
-| `OBEVAL_GOOD_THRESHOLD` · `OBEVAL_NE_RATIO` | `0.80` (yêu cầu 12/10: dưới 80% là dưới chuẩn) · `0.30` (PDC chưa chốt) |
+| `OBEVAL_GOOD_THRESHOLD` · `OBEVAL_NE_RATIO` | `0.80` (PDC chốt, tạm thời; đổi không cần chấm lại) · `0.30` (PDC chưa chốt) |
 
 ## Kiểm tra
 
 ```bash
-python -m unittest discover -s tests      # 62 test, không gọi model
+python -m unittest discover -s tests      # 115 test, không gọi model, không cần DB
 ```
 
 ## Cấu trúc
@@ -108,3 +108,22 @@ python -m unittest discover -s tests      # 62 test, không gọi model
 | `obeval/compare.py` | Đối chiếu AI với người chấm (chỉ tiêu nghiệm thu v3.0) |
 | `samples/synthetic-01/` | Buổi giả 48 phút (nhân vật hư cấu) + đáp án + kết quả đối chiếu |
 | `docs/` | Yêu cầu PDC, khả thi (luồng Drive → STT → chấm), 3 vòng review độc lập |
+
+### Chạy như service (Cloud Run)
+
+`obeval/app.py` nhận recording mới từ Apps Script (`POST /v1/recordings`) và lượt tiếp theo từ Cloud Tasks
+(`POST /v1/tasks/advance`); cả hai kiểm header `X-Obeval-Token`. `GET /healthz` không cần token.
+Image build bằng `Dockerfile` (không chứa kịch bản PDC, `data/`, `tests/` hay key nào).
+
+| Biến | Ý nghĩa |
+|---|---|
+| `OBEVAL_DB_DSN` | Chuỗi kết nối Postgres của role `obeval_writer` (Supavisor). Secret Manager |
+| `OBEVAL_API_TOKEN` | Token chung cho Apps Script và Cloud Tasks (header `X-Obeval-Token`). Secret Manager |
+| `OBEVAL_SCRIPT` | Đường dẫn kịch bản PDC, Secret Manager mount vào file lúc chạy (không nằm trong image) |
+| `OBEVAL_TEMP_TRANSCRIPT_URL` | URL service temp-transcript (yêu cầu STT) |
+| `OBEVAL_TRANSCRIPT_BUCKET` | Bucket GCS chứa `transcripts/onboarding/<booking_id>.json` (mặc định `teenup-transcripts`) |
+| `OBEVAL_TASKS_PROJECT` · `OBEVAL_TASKS_LOCATION` · `OBEVAL_TASKS_QUEUE` | Hàng đợi Cloud Tasks cho lượt `advance` |
+| `OBEVAL_SELF_URL` | URL công khai của chính service này (đích của Cloud Tasks) |
+| `OBEVAL_PUBLISH` | `false` (mặc định): ghi kết quả nhưng Mentor chưa thấy (`published_at` trống). `true` chỉ khi qua cổng chất lượng |
+| `OBEVAL_GOOD_THRESHOLD` | Ngưỡng đạt do PDC chốt (hiện tạm `0.80`) |
+| `OBEVAL_RUNS` | Số lần chấm mỗi ca rồi lấy đa số (mặc định `3`) |
