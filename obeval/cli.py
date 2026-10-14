@@ -1,4 +1,4 @@
-"""Lệnh: run · batch · rescore · dashboard · compare · human-template · check-vertex."""
+"""Lệnh: run · batch · rescore · dashboard · compare · human-template · repeat · push-db · publish · check-vertex."""
 from __future__ import annotations
 
 import argparse
@@ -66,8 +66,10 @@ def cmd_rescore(args) -> int:
 
 
 def _rebuild_dashboard(out_root: Path) -> Path:
-    rows = dashboard.collect(out_root, report.Names(prompt.load_criteria()))
-    page = dashboard.build_html(rows, prompt.load_criteria()["activities"], config.GOOD_THRESHOLD)
+    crit = prompt.load_criteria()
+    rows = dashboard.collect(out_root, report.Names(crit))
+    dashboard.publish_details(out_root)
+    page = dashboard.build_html(rows, crit["activities"], config.GOOD_THRESHOLD, crit["criteria"])
     out = out_root / "dashboard.html"
     out.write_text(page, encoding="utf-8")
     print(f"Bảng điều khiển: {out} ({len(rows)} ca)")
@@ -106,6 +108,37 @@ def cmd_compare(args) -> int:
 def cmd_template(args) -> int:
     cmp_mod.write_template(Path(args.out), prompt.load_criteria())
     print(f"Đã tạo phiếu chấm tay: {args.out}")
+    return 0
+
+
+def cmd_repeat(args) -> int:
+    if args.dry_run:  # repeat luôn gọi model thật (tốn tiền) — không âm thầm bỏ qua cờ
+        print("repeat không hỗ trợ --dry-run (lệnh gọi model thật)", file=sys.stderr)
+        return 2
+    tp = Path(args.transcript)
+    key = pipeline.case_key_from(tp, args.session_date)
+    overalls = []
+    for k in range(args.times):
+        meta = {**_meta(args), "case_id": f"{key}-lap{k + 1}"}
+        res = pipeline.run_case(tp, meta, model=args.model, thinking_budget=args.thinking,
+                                out_root=Path(args.out_root), fmt=args.format, runs=args.runs)
+        overalls.append(res.get("overall"))
+        print(f"Lần {k + 1}/{args.times}: {res['state']} · {res.get('overall')}")
+    rep = cmp_mod.stability(overalls)
+    _print(rep)
+    return 0 if rep["pass"] else 1
+
+
+def cmd_push_db(args) -> int:
+    from . import db
+    from .store import Store
+    _print(db.push(Path(args.case_dir), args.booking_id, Store(), publish=args.publish))
+    return 0
+
+
+def cmd_publish(args) -> int:
+    from .store import Store
+    print(f"Đã cho Mentor xem {Store().publish_done()} ca")
     return 0
 
 
@@ -166,6 +199,21 @@ def main(argv=None) -> int:
     p = sub.add_parser("human-template", help="Tạo phiếu chấm tay CSV cho học thuật")
     p.add_argument("out")
     p.set_defaults(func=cmd_template)
+
+    p = sub.add_parser("repeat", help="Chấm lại cùng một transcript nhiều lần, đo độ lệch % follow (cổng ≤ 5 điểm)")
+    p.add_argument("transcript")
+    p.add_argument("--times", type=int, default=3)
+    common(p)
+    p.set_defaults(func=cmd_repeat)
+
+    p = sub.add_parser("push-db", help="Ghi kết quả một ca lên DB đặt lịch (OBEVAL_DB_DSN, role obeval_writer)")
+    p.add_argument("case_dir")
+    p.add_argument("--booking-id", required=True, help="bookings.id của buổi onboarding")
+    p.add_argument("--publish", action="store_true", help="Cho Mentor xem ngay (chỉ sau khi qua cổng chất lượng)")
+    p.set_defaults(func=cmd_push_db)
+
+    p = sub.add_parser("publish", help="Qua cổng chất lượng: cho Mentor xem mọi ca đã chấm xong")
+    p.set_defaults(func=cmd_publish)
 
     p = sub.add_parser("check-vertex", help="Kiểm model có dùng được trên Vertex công ty (chỉ đọc metadata)")
     p.add_argument("--model", default=config.DEFAULT_MODEL)

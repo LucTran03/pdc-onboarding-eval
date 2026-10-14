@@ -1,0 +1,26 @@
+{
+ "session_id": "00000000-0000-0000-0000-000000000000",
+ "transcript": "Cô chào hai mẹ con, mẹ và con nghe rõ tiếng cô chưa ạ? Dạ con nghe rõ ạ. Dạ chị nghe rõ cô ơi. Cô tên là Lan, cô là Mentor đồng hành cùng con trong năm nay. Ngày xưa có một chú chim sẻ nhỏ sống bên bờ sông. Mẹ ghi giúp cô số điện thoại 0912 345 678 để nhận lịch học nhé.",
+ "segments": [
+  {"start_sec": 2.1, "end_sec": 6.4, "text": "Cô chào hai mẹ con, mẹ và con nghe rõ tiếng cô chưa ạ?", "role": "mentor"},
+  {"start_sec": 7.0, "end_sec": 8.2, "text": "Dạ con nghe rõ ạ.", "role": "student"},
+  {"start_sec": 8.5, "end_sec": 9.9, "text": "Dạ chị nghe rõ cô ơi.", "role": "parent"},
+  {"start_sec": 11.0, "end_sec": 16.3, "text": "Cô tên là Lan, cô là Mentor đồng hành cùng con trong năm nay.", "role": "mentor"},
+  {"start_sec": 620.0, "end_sec": 628.5, "text": "Ngày xưa có một chú chim sẻ nhỏ sống bên bờ sông.", "role": "media"},
+  {"start_sec": 2700.0, "end_sec": 2706.0, "text": "Mẹ ghi giúp cô số điện thoại 0912 345 678 để nhận lịch học nhé.", "role": "mentor"}
+ ],
+ "duration_sec": 2710.0,
+ "turns": [
+  {"start_sec": 2.1, "end_sec": 6.4, "text": "Cô chào hai mẹ con, mẹ và con nghe rõ tiếng cô chưa ạ?", "role": "mentor", "label": "Mentor"},
+  {"start_sec": 7.0, "end_sec": 8.2, "text": "Dạ con nghe rõ ạ.", "role": "student", "label": "Học sinh"},
+  {"start_sec": 8.5, "end_sec": 9.9, "text": "Dạ chị nghe rõ cô ơi.", "role": "parent", "label": "Phụ huynh"},
+  {"start_sec": 11.0, "end_sec": 16.3, "text": "Cô tên là Lan, cô là Mentor đồng hành cùng con trong năm nay.", "role": "mentor", "label": "Mentor"},
+  {"start_sec": 620.0, "end_sec": 628.5, "text": "Ngày xưa có một chú chim sẻ nhỏ sống bên bờ sông.", "role": "media", "label": "[VIDEO]"},
+  {"start_sec": 2700.0, "end_sec": 2706.0, "text": "Mẹ ghi giúp cô số điện thoại 0912 345 678 để nhận lịch học nhé.", "role": "mentor", "label": "Mentor"}
+ ],
+ "transcript_labeled": "[00:00:02 - 00:00:06] Mentor: Cô chào hai mẹ con, mẹ và con nghe rõ tiếng cô chưa ạ?\n[00:00:07 - 00:00:08] Học sinh: Dạ con nghe rõ ạ.\n[00:00:08 - 00:00:09] Phụ huynh: Dạ chị nghe rõ cô ơi.\n[00:00:11 - 00:00:16] Mentor: Cô tên là Lan, cô là Mentor đồng hành cùng con trong năm nay.\n[00:10:20 - 00:10:28] [VIDEO]: Ngày xưa có một chú chim sẻ nhỏ sống bên bờ sông.\n[00:45:00 - 00:45:06] Mentor: Mẹ ghi giúp cô số điện thoại 0912 345 678 để nhận lịch học nhé.",
+ "roles": {"0": "mentor", "1": "student", "2": "parent", "3": "media"},
+ "session_flag": "ok",
+ "pipeline": "diarized-v1",
+ "timings": {"diarize": 10.2, "asr": 30.1, "roles": 0.4}
+}

@@ -112,6 +112,9 @@ def run_case(transcript_path: Path, meta: dict, model: str = config.DEFAULT_MODE
         _write(case_dir / "dashboard_row.json", dashboard.make_row(case_key, meta, None, None, "processing", names))
     try:
         tr = transcript.load(transcript_path, fmt)
+        if not meta.get("mentor_label") and tr.mentor_label:  # STT chia người nói đã gán vai
+            meta["mentor_label"] = tr.mentor_label
+        meta["duration_sec"] = tr.duration_sec  # email: mốc kết thúc của hoạt động cuối
         _write(case_dir / "transcript_normalized.txt", transcript.render(tr))
         if not tr.segments:
             raise ValueError("Transcript rỗng — không chấm")

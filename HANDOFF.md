@@ -42,12 +42,16 @@
 ## 4. Việc tiếp theo
 
 **Giai đoạn 1 — nghiệm thu với PDC:**
-1. Nối **STT có tách người nói** (service của em) vào. Kiểm adapter trong `transcript.py` đọc đúng file JSON đầu ra, và thêm test bằng một file mẫu đã xoá dữ liệu thật.
+1. ~~Nối **STT có tách người nói** (service của em) vào. Kiểm adapter trong `transcript.py` đọc đúng file JSON đầu ra, và thêm test bằng một file mẫu đã xoá dữ liệu thật.~~ **Xong 12/10:**
+   - `transcript.py` đọc JSON STT `PIPELINE=diarized`: đổi vai sang Mentor / Học sinh / Phụ huynh / [VIDEO], tự điền nhãn Mentor, cảnh báo khi `session_flag=insufficient` hoặc `legacy-fallback`.
+   - Test bằng mẫu ẩn danh `tests/fixtures/stt_diarized_sample.json`.
+   - `tools/stt_local.py` chạy STT ngay trên máy cho 5 video nghiệm thu, vì pipeline mới chưa bật trên server.
+   - Đã chạy thật trên 1 file mp4 test (1 phút) và dry-run `obeval`. **Chưa chạy trên buổi onboarding thật.**
 2. Xin PDC **5 video kèm phiếu chấm tay** (`python run.py human-template`). Chạy `batch`, rồi `compare --pairs` để có bảng đối chiếu.
 3. Chỉnh prompt hoặc danh mục theo các chỗ lệch. Mỗi lần chỉnh, chạy lại cả 5 ca để so.
 4. Chờ PDC chốt:
    - cách chấm phần bán hàng khi kịch bản dạy "ưu đãi 24h" mà brief bắt gắn cờ F09 (`script_instructed` đã tách riêng);
-   - ngưỡng "tuân thủ tốt" (đang để 85%) và ngưỡng "thiếu dữ liệu" (NE > 30%; mẫu số có tính NA hay không).
+   - ngưỡng "thiếu dữ liệu" (NE > 30%; mẫu số có tính NA hay không). Ngưỡng "tuân thủ tốt" đã chốt 80% theo yêu cầu nhận 12/10.
 
 **Giai đoạn 2 — vận hành** (xem [`docs/kha-thi-2026-10-09.md`](docs/kha-thi-2026-10-09.md) §1–2):
 5. **Tự nhận ca onboarding:** Apps Script recording (Nhật Anh giữ) hiện chỉ lọc `Gia sư Mentor 1:1 hàng tuần`. Cần thêm nhánh cho tên chứa `Gia sư Mentor 1:1 (Onboard)` hoặc `1:1 Mentor Onboarding`.
@@ -62,6 +66,12 @@
   - giá viết liền không đơn vị và ngày tháng bị che dư (chấp nhận được).
 - **Transcript không nhãn người nói:** không chặn được trích dẫn ghép lời 2 người. Nên dùng STT có tách người nói.
 - **STT gán nhầm người nói:** chỉ chịu được khi phần nhầm ≤ 3 từ và ≤ 25% đoạn trích.
+- **STT v1 đảo nhãn Phụ huynh ↔ Học sinh ở buổi onboarding** (12/10, cả 2 ca thật).
+  - Nguyên nhân: luật gán vai viết cho buổi 1:1 hàng tuần, coi người đổi lượt với Mentor nhiều nhất là học sinh. Buổi onboarding thì phụ huynh nói riêng với Mentor lâu nhất.
+  - `transcript.py` tự đổi lại nhãn khi nhãn "Phụ huynh" có nhiều lời kiểu trẻ con hơn hẳn (`CHILD_CUES`), và ghi cảnh báo.
+  - Sửa gốc phải làm ở repo STT (`app/pipeline/roles.py`): cho STT biết loại buổi, chọn ai là con theo cách xưng hô.
+  - Câu bị gộp lẫn khi bố/mẹ và con ngồi chung một máy thì đổi nhãn không sửa được.
+- **Độ dao động giữa các lần chấm trên buổi thật lớn:** ca TC16542 chấm 3 lượt ra 65,0% / 61,8% / 72,8%; 3 lần chấm trong một lượt chỉ thống nhất 65–70% số tiêu chí. Cần giảm trước khi nghiệm thu (ngưỡng ±5 điểm %).
 - **Bảng `transcripts` ở DB TeenCareParent:** không có buổi onboarding nào; chỉ ~3% đoạn có mốc giờ, gần như không có nhãn người nói (đo 09/10).
 
 ## 6. An toàn dữ liệu

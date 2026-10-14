@@ -33,6 +33,21 @@ python run.py check-vertex --model gemini-2.5-pro
 
 ## Chạy
 
+**Từ video đến transcript (giai đoạn 1, khi STT chia người nói chưa bật trên server):** chạy STT ngay trên máy bằng
+[`tools/stt_local.py`](tools/stt_local.py). Script dùng Python của venv repo SpeechToText, nhánh
+`feat/stt-diarized-pipeline`, và ghi JSON giống file worker ghi lên GCS. Không chạy trên GPU prod dùng chung.
+
+```bash
+<SpeechToText>/.venv-dev/Scripts/python tools/stt_local.py data/raw/<video>.mp4 data/in/<ca>.json \
+    --models D:/TeenCare/stt-models --dll-dir <thư mục cublas64_12.dll> --dll-dir <thư mục cudnn*.dll>
+```
+
+- Thư mục `--models` gồm: `sortformer/` (export từ `.nemo` bằng `tools/export_sortformer_onnx.py` của repo STT), `titanet/`, `gipformer/`, `turbo/`.
+- Bỏ `--dll-dir` thì đặt `DEVICE=cpu` để chạy turbo bằng CPU (chậm hơn).
+- Đo trên laptop RTX 3050: 1 phút audio xử lý mất 13 giây.
+
+**Chấm:**
+
 ```bash
 python run.py run data/in/<transcript>.json --session-date 2025-10-28 --mentor-name "Thầy/Cô <tên>" --mentor-label SPEAKER_00
 python run.py batch data/in                          # mọi transcript trong thư mục
@@ -54,7 +69,8 @@ python run.py compare --ai data/out/<ca> --human <phiếu>.csv --out doi-chieu.m
 
 | Nguồn | Ví dụ |
 |---|---|
-| STT có tách người nói | `{"segments":[{"start":3.2,"end":9.8,"speaker":"SPEAKER_00","text":"..."}]}` (nhận cả `start_ms`, `speaker_label`, `utterances`) |
+| **STT TeenCare chia người nói** (`PIPELINE=diarized`) | `{"segments":[{"start_sec":2.1,"end_sec":6.4,"text":"...","role":"mentor"}],"roles":{...},"session_flag":"ok","pipeline":"diarized-v1"}`: vai đổi thành Mentor / Học sinh / Phụ huynh / [VIDEO], tự điền nhãn Mentor; `session_flag=insufficient` và `legacy-fallback` thành cảnh báo dữ liệu. Mẫu ẩn danh: `tests/fixtures/stt_diarized_sample.json` |
+| STT có tách người nói khác | `{"segments":[{"start":3.2,"end":9.8,"speaker":"SPEAKER_00","text":"..."}]}` (nhận cả `start_ms`, `speaker_label`, `utterances`) |
 | File GCS `transcripts/<sid>.json` | `{"transcript":"...","segments":[...]}` |
 | Hàng bảng `transcripts` (DB TeenCareParent) | `{"transcript":[{"text":..,"start_time":-1}]}` — không mốc giờ thì dùng số dòng `#0001` |
 | Google Meet transcript (.txt) | dòng `00:05:00`, rồi `Tên: lời` |
@@ -68,19 +84,20 @@ python run.py compare --ai data/out/<ca> --human <phiếu>.csv --out doi-chieu.m
 | `OBEVAL_SCRIPT` · `OBEVAL_OUT_ROOT` | `<data>/raw/090426_SEC_Script_Onboarding.txt` · `<data>/out` |
 | `OBEVAL_GCP_PROJECT` · `OBEVAL_GCP_LOCATION` | `tcservices2027` · `us-central1` |
 | `OBEVAL_MODEL` · `OBEVAL_RUNS` · `OBEVAL_THINKING` | `gemini-2.5-pro` · `3` · `16384` |
-| `OBEVAL_GOOD_THRESHOLD` · `OBEVAL_NE_RATIO` | `0.85` · `0.30` (PDC chưa chốt) |
+| `OBEVAL_GOOD_THRESHOLD` · `OBEVAL_NE_RATIO` | `0.80` (PDC chốt, tạm thời; đổi không cần chấm lại) · `0.30` (PDC chưa chốt) |
 
 ## Kiểm tra
 
 ```bash
-python -m unittest discover -s tests      # 60 test, không gọi model
+python -m unittest discover -s tests      # 115 test, không gọi model, không cần DB
 ```
 
 ## Cấu trúc
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `obeval/transcript.py` | Đọc mọi định dạng, chuẩn hoá chữ, che SĐT / số tài khoản (`[SỐ]`) |
+| `obeval/transcript.py` | Đọc mọi định dạng (cả JSON STT chia người nói), chuẩn hoá chữ, che SĐT / số tài khoản (`[SỐ]`) |
+| `tools/stt_local.py` | Chạy STT chia người nói trên máy: video → JSON cho `obeval` |
 | `obeval/prompt.py` · `prompt/` | System prompt, danh mục tiêu chí (`criteria.json`), schema đầu ra |
 | `obeval/llm.py` | Gọi Gemini trên Vertex AI (schema JSON, thinking, thử lại) |
 | `obeval/validate.py` | Kiểm schema, vá chỗ thiếu thành `NE` (không bịa) |
@@ -91,3 +108,22 @@ python -m unittest discover -s tests      # 60 test, không gọi model
 | `obeval/compare.py` | Đối chiếu AI với người chấm (chỉ tiêu nghiệm thu v3.0) |
 | `samples/synthetic-01/` | Buổi giả 48 phút (nhân vật hư cấu) + đáp án + kết quả đối chiếu |
 | `docs/` | Yêu cầu PDC, khả thi (luồng Drive → STT → chấm), 3 vòng review độc lập |
+
+### Chạy như service (Cloud Run)
+
+`obeval/app.py` nhận recording mới từ Apps Script (`POST /v1/recordings`) và lượt tiếp theo từ Cloud Tasks
+(`POST /v1/tasks/advance`); cả hai kiểm header `X-Obeval-Token`. `GET /healthz` không cần token.
+Image build bằng `Dockerfile` (không chứa kịch bản PDC, `data/`, `tests/` hay key nào).
+
+| Biến | Ý nghĩa |
+|---|---|
+| `OBEVAL_DB_DSN` | Chuỗi kết nối Postgres của role `obeval_writer` (Supavisor). Secret Manager |
+| `OBEVAL_API_TOKEN` | Token chung cho Apps Script và Cloud Tasks (header `X-Obeval-Token`). Secret Manager |
+| `OBEVAL_SCRIPT` | Đường dẫn kịch bản PDC, Secret Manager mount vào file lúc chạy (không nằm trong image) |
+| `OBEVAL_TEMP_TRANSCRIPT_URL` | URL service temp-transcript (yêu cầu STT) |
+| `OBEVAL_TRANSCRIPT_BUCKET` | Bucket GCS chứa `transcripts/onboarding/<booking_id>.json` (mặc định `teenup-transcripts`) |
+| `OBEVAL_TASKS_PROJECT` · `OBEVAL_TASKS_LOCATION` · `OBEVAL_TASKS_QUEUE` | Hàng đợi Cloud Tasks cho lượt `advance` |
+| `OBEVAL_SELF_URL` | URL công khai của chính service này (đích của Cloud Tasks) |
+| `OBEVAL_PUBLISH` | `false` (mặc định): ghi kết quả nhưng Mentor chưa thấy (`published_at` trống). `true` chỉ khi qua cổng chất lượng |
+| `OBEVAL_GOOD_THRESHOLD` | Ngưỡng đạt do PDC chốt (hiện tạm `0.80`) |
+| `OBEVAL_RUNS` | Số lần chấm mỗi ca rồi lấy đa số (mặc định `3`) |

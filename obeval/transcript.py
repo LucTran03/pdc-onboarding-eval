@@ -31,6 +31,7 @@ class Transcript:
     source_format: str
     duration_sec: float | None = None
     warnings: list[str] = field(default_factory=list)
+    mentor_label: str | None = None  # nhãn của Mentor khi nguồn đã gán vai (STT chia người nói)
 
     @property
     def has_timestamps(self) -> bool:
@@ -231,6 +232,66 @@ def _parse_json(data) -> tuple[list[Segment], str, float | None]:
     raise ValueError("Không tìm thấy lời thoại trong JSON (segments/transcript/text)")
 
 
+# STT chia người nói (repo SpeechToText, PIPELINE=diarized|shadow; app/pipeline/runner.py `_result`):
+# {"segments":[{start_sec,end_sec,text,role}], "roles":{spk: vai}, "session_flag":"ok"|"insufficient",
+#  "pipeline":"diarized-v1"}. Lỗi thì STT trả bản cũ với "pipeline":"legacy-fallback" (đoạn không có vai).
+STT_ROLE_LABELS = {"mentor": "Mentor", "student": "Học sinh", "parent": "Phụ huynh",
+                   "media": "[VIDEO]", "other": "Người khác"}
+
+
+# Luật gán vai của STT v1 viết cho buổi 1:1 hàng tuần (Mentor + con): ai đổi lượt với Mentor nhiều nhất là "học sinh".
+# Buổi onboarding có phần trao đổi riêng với phụ huynh rất dài nên phụ huynh thắng → hai nhãn bị đảo (đo 12/10 trên
+# 2 ca thật: lời trẻ con ở nhãn "parent" 10,9 và 19,2 / 1000 từ, ở nhãn "student" 1,1). Nhận ra bằng cách con tự xưng.
+CHILD_CUES = re.compile(r"\b(dạ con|con thích|con tên|con học lớp|con sợ|con muốn|con thấy|cô ơi|thưa cô)\b")
+SWAP_MIN_CUES = 5      # nhãn "Phụ huynh" cần ít nhất chừng này câu kiểu trẻ con
+SWAP_RATIO = 3.0       # và tỷ lệ gấp chừng này lần nhãn "Học sinh" (mẫu số tối thiểu 1/1000 từ)
+
+
+def _child_label_swapped(segs: list[Segment]) -> tuple[float, float] | None:
+    """(tỷ lệ ở nhãn Phụ huynh, tỷ lệ ở nhãn Học sinh) theo /1000 từ nếu hai nhãn bị đảo, không thì None."""
+    stats = {}
+    for role in ("parent", "student"):
+        txt = " ".join(unicodedata.normalize("NFC", s.text.lower()) for s in segs if s.speaker == STT_ROLE_LABELS[role])
+        words = len(txt.split())
+        if not words:
+            return None
+        n = len(CHILD_CUES.findall(txt))
+        stats[role] = (n, n / words * 1000)
+    (n_p, r_p), (_, r_s) = stats["parent"], stats["student"]
+    if n_p >= SWAP_MIN_CUES and r_p >= SWAP_RATIO * max(r_s, 1.0):
+        return r_p, r_s
+    return None
+
+
+def _apply_stt_roles(data, segs: list[Segment]) -> tuple[str | None, str | None, list[str]]:
+    """Nguồn là STT chia người nói → (định dạng, nhãn Mentor, cảnh báo); đổi mã vai trong ``segs`` sang nhãn tiếng Việt."""
+    if not isinstance(data, dict):
+        return None, None, []
+    name = str(data.get("pipeline") or "")
+    if name == "legacy-fallback":
+        return "stt_legacy_fallback", None, [
+            "STT chia người nói bị lỗi ở buổi này, đã trả bản không nhãn người nói — model phải suy vai từ ngữ cảnh"]
+    if not name.startswith("diarized"):
+        return None, None, []
+    for s in segs:
+        s.speaker = STT_ROLE_LABELS.get(s.speaker, s.speaker)
+    warns = ["Nhãn vai do STT tự gán theo giọng: có thể nhầm Phụ huynh ↔ Học sinh khi dùng chung thiết bị; "
+             "[VIDEO] là tiếng video chiếu trong buổi, không phải lời Mentor"]
+    swap = _child_label_swapped(segs)
+    if swap:
+        p, st = STT_ROLE_LABELS["parent"], STT_ROLE_LABELS["student"]
+        for s in segs:
+            s.speaker = {p: st, st: p}.get(s.speaker, s.speaker)
+        warns.append(f"Đã tự đổi chỗ nhãn Phụ huynh ↔ Học sinh của STT: lời kiểu trẻ con ở nhãn '{p}' "
+                     f"{swap[0]:.1f}/1000 từ, ở nhãn '{st}' {swap[1]:.1f}/1000 từ")
+    if data.get("session_flag") == "insufficient":
+        warns.append("STT đánh dấu buổi thiếu đối thoại (không có học sinh/phụ huynh, hoặc đối thoại dưới 3 phút)")
+    mentor = STT_ROLE_LABELS["mentor"] if any(s.speaker == STT_ROLE_LABELS["mentor"] for s in segs) else None
+    if mentor is None:
+        warns.append("STT không nhận ra giọng Mentor trong buổi")
+    return "stt_diarized", mentor, warns
+
+
 # ---------------------------------------------------------------- văn bản
 
 _BRACKET_LINE = re.compile(
@@ -395,11 +456,17 @@ def load(path: str | Path, fmt: str = "auto") -> Transcript:
             data = json.loads(raw)
         except json.JSONDecodeError:
             data = None
+    mentor, warns = None, []
     if data is not None:
         segs, source, duration = _parse_json(data)
+        stt_source, mentor, warns = _apply_stt_roles(data, segs)
+        source = stt_source or source
     else:
         segs, source = _parse_text(raw, fmt)
-    return finalize(segs, source, duration)
+    tr = finalize(segs, source, duration)
+    tr.mentor_label = mentor
+    tr.warnings[:0] = warns
+    return tr
 
 
 def finalize(segs: list[Segment], source: str, duration: float | None = None) -> Transcript:
