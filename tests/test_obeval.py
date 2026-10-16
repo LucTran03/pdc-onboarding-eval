@@ -339,6 +339,35 @@ class TestReports(unittest.TestCase):
         self.assertNotIn("Khang", page)
         self.assertIn("Không xếp hạng", page)
 
+    def test_estimate_cost_none_for_placeholder_prices(self):
+        """Giá tạm (chưa có giá Vertex chính thức) không được thành số liệu chi phí giả."""
+        from obeval import llm
+
+        usage = {"prompt_tokens": 20000, "output_tokens": 5000, "thinking_tokens": 0}
+        for m in ("gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.8-flash"):
+            self.assertIsNone(llm.estimate_cost(m, usage), m)
+        self.assertIsInstance(llm.estimate_cost("gemini-2.5-pro", usage), float)
+        self.assertIsInstance(llm.estimate_cost("gemini-2.5-flash", usage), float)
+
+    def test_consumers_handle_unknown_cost(self):
+        """cost_usd_est=None: DB lưu NULL, báo cáo/CLI không in chữ 'None'."""
+        from obeval import cli, db
+
+        res, _ = validate.normalize(fake_raw())
+        res, _, _ = verify.verify(res, make_tr())
+        sc = score.compute(res, CRIT)
+        meta = {"session_date": "2026-10-09", "mentor_name": "Thầy Khang", "mentor_email": "k@example.com", "case_id": "t1"}
+        run_info = {"model": "gemini-3.8-flash", "cost_usd_est": None, "ai_issues": [], "quote_stats": {}, "usage": {}}
+        page = report.detail_html(res, sc, meta, NAMES, run_info)
+        self.assertNotIn("None USD", page)
+        self.assertIn("chưa có giá", page)
+        self.assertNotIn("None USD", cli.score_str({"state": "done", "overall": 0.9, "classification": "good",
+                                                    "cost_usd_est": None}))
+        self.assertIn("~0.12 USD", cli.score_str({"state": "done", "overall": 0.9, "classification": "good", "cost_usd_est": 0.12}))
+        doc = {"meta": {"session_date": "2026-10-11", "duration_sec": 2700.4}, "scores": sc,
+               "run": run_info, **res}
+        self.assertIsNone(db.build_rows(doc, "b-1", NAMES)["audit"]["cost_usd"])
+
     def test_detail_renders(self):
         h = report.detail_html(self.res, self.sc, self.meta, NAMES, {"ai_issues": ["x"], "quote_stats": {}, "usage": {}})
         self.assertIn("OB37", h)
@@ -838,6 +867,57 @@ class TestCliRepeat(unittest.TestCase):
         self.assertEqual(code, 2)
         run.assert_not_called()
         self.assertIn("repeat không hỗ trợ --dry-run", err.getvalue())
+
+
+class TestConfigDefaults(unittest.TestCase):
+    """Mặc định sau khi 2.5 ngừng hoạt động (20/10/2026): gemini-3.8-flash, thinking 0, vùng global."""
+
+    def test_defaults_without_env(self):
+        import os
+        from unittest import mock
+
+        import importlib
+
+        import obeval.config as cfg
+
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("OBEVAL_GCP_LOCATION", "OBEVAL_MODEL", "OBEVAL_THINKING")}
+        try:
+            with mock.patch.dict(os.environ, env, clear=True):
+                importlib.reload(cfg)
+                self.assertEqual(cfg.GCP_LOCATION, "global")
+                self.assertEqual(cfg.DEFAULT_MODEL, "gemini-3.8-flash")
+                self.assertEqual(cfg.DEFAULT_THINKING_BUDGET, 0)
+        finally:
+            importlib.reload(cfg)  # trả lại trạng thái theo môi trường thật
+
+    def test_pricing_has_new_models_and_keeps_25(self):
+        import obeval.config as cfg
+
+        for m in ("gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.8-flash",
+                  "gemini-2.5-pro", "gemini-2.5-flash"):
+            self.assertIn(m, cfg.PRICING)
+            self.assertTrue({"input", "output"} <= set(cfg.PRICING[m]))
+
+    def test_default_call_sends_thinking_budget_zero(self):
+        """Đường mặc định phải gửi thinking_budget=0 thật (không bị biến thành None)."""
+        from unittest import mock
+
+        from obeval import llm
+
+        captured = {}
+
+        class FakeModels:
+            def generate_content(self, model, contents, config):
+                captured["model"] = model
+                captured["thinking_budget"] = config.thinking_config.thinking_budget
+                return mock.Mock(text="{}", usage_metadata=None, candidates=[], model_version="x")
+
+        fake = mock.Mock(models=FakeModels())
+        with mock.patch.object(llm, "_client", return_value=fake):
+            llm.call("s", "u", {"type": "object"})
+        self.assertEqual(captured["thinking_budget"], 0)
+        self.assertEqual(captured["model"], "gemini-3.8-flash")
 
 
 if __name__ == "__main__":

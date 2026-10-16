@@ -23,12 +23,12 @@ OUT_ROOT = Path(os.environ.get("OBEVAL_OUT_ROOT", str(DATA_ROOT / "out")))
 # Vertex AI của công ty. Credential: GOOGLE_APPLICATION_CREDENTIALS (service account) hoặc
 # `gcloud auth application-default login`. OBEVAL_GCP_KEY chỉ là đường dẫn — tool không mở file key.
 GCP_PROJECT = os.environ.get("OBEVAL_GCP_PROJECT", "tcservices2027")
-GCP_LOCATION = os.environ.get("OBEVAL_GCP_LOCATION", "us-central1")
+GCP_LOCATION = os.environ.get("OBEVAL_GCP_LOCATION", "global")
 _LEGACY_KEY = "D:/teencare-data/" + "gcp-key" + ".json"
 GCP_KEY_PATH = os.environ.get("OBEVAL_GCP_KEY") or (_LEGACY_KEY if os.path.exists(_LEGACY_KEY) else "")
 
-DEFAULT_MODEL = os.environ.get("OBEVAL_MODEL", "gemini-2.5-pro")
-DEFAULT_THINKING_BUDGET = int(os.environ.get("OBEVAL_THINKING", "16384"))
+DEFAULT_MODEL = os.environ.get("OBEVAL_MODEL", "gemini-3.8-flash")
+DEFAULT_THINKING_BUDGET = int(os.environ.get("OBEVAL_THINKING", "0"))
 DEFAULT_MAX_OUTPUT_TOKENS = 65535
 # Số lần chấm mỗi ca rồi lấy đa số (ensemble.py). Đo 09/10: 1 lần chạy dao động 76–89% trùng đáp án.
 DEFAULT_RUNS = int(os.environ.get("OBEVAL_RUNS", "3"))
@@ -51,4 +51,11 @@ MAX_TRANSCRIPT_TOKENS_WARN = 100_000
 PRICING = {
     "gemini-2.5-pro": {"input": 1.25, "output": 10.0},
     "gemini-2.5-flash": {"input": 0.30, "output": 2.50},
+    # TODO(price): placeholder = 2.5-flash price, replace with official Vertex price before relying on estimate_cost
+    # "placeholder": True => llm.estimate_cost trả None (DB lưu NULL, báo cáo ghi "chưa có giá"), không in số giả.
+    "gemini-3.1-flash-lite": {"input": 0.30, "output": 2.50, "placeholder": True},
+    # TODO(price): placeholder = 2.5-flash price, replace with official Vertex price before relying on estimate_cost
+    "gemini-3.5-flash-lite": {"input": 0.30, "output": 2.50, "placeholder": True},
+    # TODO(price): placeholder = 2.5-flash price, replace with official Vertex price before relying on estimate_cost
+    "gemini-3.8-flash": {"input": 0.30, "output": 2.50, "placeholder": True},
 }

@@ -26,7 +26,7 @@ pip install -r requirements.txt
 Kiểm model có dùng được không (chỉ đọc metadata, không tốn tiền):
 
 ```bash
-python run.py check-vertex --model gemini-2.5-pro
+python run.py check-vertex --model gemini-3.8-flash
 ```
 
 **Kịch bản PDC** (`090426_SEC_Script_Onboarding.txt`) **không có trong repo**, vì kịch bản có số tài khoản ngân hàng. Xin anh Lực hoặc PDC, rồi đặt vào `data/raw/` (hoặc trỏ `OBEVAL_SCRIPT`).
@@ -58,7 +58,7 @@ python run.py human-template data/phieu-cham-tay.csv # phiếu cho học thuật
 python run.py compare --ai data/out/<ca> --human <phiếu>.csv --out doi-chieu.md
 ```
 
-- Mặc định mỗi ca chấm **3 lần song song** (Gemini 2.5 Pro, temperature 1.0, seed khác nhau) rồi lấy đa số. Chi phí khoảng 0,7 USD và 3 phút mỗi ca. Thử nhanh thì thêm `--runs 1`.
+- Mặc định mỗi ca chấm **3 lần song song** (Gemini 3.8 Flash, thinking tắt, temperature 1.0, seed khác nhau) rồi lấy đa số. Chi phí khoảng 0,7 USD và 3 phút mỗi ca là số đo với Gemini 2.5 Pro, chưa đo lại với model mới. Thử nhanh thì thêm `--runs 1`.
 - Kết quả mỗi ca nằm trong `data/out/<ngày>_<tên file>_<băm>/`:
   - `email_mentor.html` / `.eml`;
   - `detail.html` (trang kiểm định: 37 tiêu chí, trích dẫn ✓/✗, độ ổn định giữa các lần chấm);
@@ -82,8 +82,8 @@ python run.py compare --ai data/out/<ca> --human <phiếu>.csv --out doi-chieu.m
 |---|---|
 | `OBEVAL_DATA_ROOT` | `./data` (hoặc `D:/teencare-data/pdc-onboarding` nếu tồn tại) |
 | `OBEVAL_SCRIPT` · `OBEVAL_OUT_ROOT` | `<data>/raw/090426_SEC_Script_Onboarding.txt` · `<data>/out` |
-| `OBEVAL_GCP_PROJECT` · `OBEVAL_GCP_LOCATION` | `tcservices2027` · `us-central1` |
-| `OBEVAL_MODEL` · `OBEVAL_RUNS` · `OBEVAL_THINKING` | `gemini-2.5-pro` · `3` · `16384` |
+| `OBEVAL_GCP_PROJECT` · `OBEVAL_GCP_LOCATION` | `tcservices2027` · `global` |
+| `OBEVAL_MODEL` · `OBEVAL_RUNS` · `OBEVAL_THINKING` | `gemini-3.8-flash` · `3` · `0` |
 | `OBEVAL_GOOD_THRESHOLD` · `OBEVAL_NE_RATIO` | `0.80` (PDC chốt, tạm thời; đổi không cần chấm lại) · `0.30` (PDC chưa chốt) |
 
 ## Kiểm tra
