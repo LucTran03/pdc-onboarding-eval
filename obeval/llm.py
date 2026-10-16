@@ -44,7 +44,7 @@ def count_tokens(model: str, system: str, user: str) -> int | None:
 
 def estimate_cost(model: str, usage: dict) -> float | None:
     price = config.PRICING.get(model)
-    if not price:
+    if not price or price.get("placeholder"):  # chưa có giá Vertex chính thức: không bịa số chi phí
         return None
     inp = usage.get("prompt_tokens") or 0
     out = (usage.get("output_tokens") or 0) + (usage.get("thinking_tokens") or 0)

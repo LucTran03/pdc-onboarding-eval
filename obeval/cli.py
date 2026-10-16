@@ -55,7 +55,9 @@ def score_str(res: dict) -> str:
     if res.get("state") != "done":
         return res.get("error", "")
     o = res.get("overall")
-    return f"{'—' if o is None else f'{o * 100:.0f}%'} · {res.get('classification')} · ~{res.get('cost_usd_est')} USD"
+    cost = res.get("cost_usd_est")
+    cost_s = "chưa có giá" if cost is None else f"~{cost} USD"
+    return f"{'—' if o is None else f'{o * 100:.0f}%'} · {res.get('classification')} · {cost_s}"
 
 
 def cmd_rescore(args) -> int:

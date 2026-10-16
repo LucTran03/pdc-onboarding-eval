@@ -52,9 +52,10 @@ PRICING = {
     "gemini-2.5-pro": {"input": 1.25, "output": 10.0},
     "gemini-2.5-flash": {"input": 0.30, "output": 2.50},
     # TODO(price): placeholder = 2.5-flash price, replace with official Vertex price before relying on estimate_cost
-    "gemini-3.1-flash-lite": {"input": 0.30, "output": 2.50},
+    # "placeholder": True => llm.estimate_cost trả None (DB lưu NULL, báo cáo ghi "chưa có giá"), không in số giả.
+    "gemini-3.1-flash-lite": {"input": 0.30, "output": 2.50, "placeholder": True},
     # TODO(price): placeholder = 2.5-flash price, replace with official Vertex price before relying on estimate_cost
-    "gemini-3.5-flash-lite": {"input": 0.30, "output": 2.50},
+    "gemini-3.5-flash-lite": {"input": 0.30, "output": 2.50, "placeholder": True},
     # TODO(price): placeholder = 2.5-flash price, replace with official Vertex price before relying on estimate_cost
-    "gemini-3.8-flash": {"input": 0.30, "output": 2.50},
+    "gemini-3.8-flash": {"input": 0.30, "output": 2.50, "placeholder": True},
 }

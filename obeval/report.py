@@ -430,7 +430,7 @@ def detail_html(result: dict, scores: dict, meta: dict, names: Names, run_info: 
     p.append("<h2>Thông tin chạy</h2><ul>"
              f"<li>Model: {e(str(run_info.get('model')))} ({e(str(run_info.get('model_version')))}) · thời gian {e(str(run_info.get('latency_sec')))} giây</li>"
              f"<li>Token: prompt {usage.get('prompt_tokens')} · output {usage.get('output_tokens')} · thinking {usage.get('thinking_tokens')} · "
-             f"chi phí ước {run_info.get('cost_usd_est')} USD</li>"
+             f"chi phí ước {'chưa có giá model' if run_info.get('cost_usd_est') is None else str(run_info['cost_usd_est']) + ' USD'}</li>"
              f"<li>Trích dẫn (cộng {n_runs} lần chấm): {qs.get('total', 0)} · khớp nguyên văn {qs.get('exact', 0)} · "
              f"gần đúng {qs.get('fuzzy', 0)} · không thấy {qs.get('not_found', 0)} · quá ngắn {qs.get('too_short', 0)}</li>"
              f"<li>Transcript: {e(str(run_info.get('transcript_format')))} · {run_info.get('segments')} đoạn · {run_info.get('words')} từ</li>"
