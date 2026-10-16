@@ -840,5 +840,56 @@ class TestCliRepeat(unittest.TestCase):
         self.assertIn("repeat không hỗ trợ --dry-run", err.getvalue())
 
 
+class TestConfigDefaults(unittest.TestCase):
+    """Mặc định sau khi 2.5 ngừng hoạt động (20/10/2026): gemini-3.8-flash, thinking 0, vùng global."""
+
+    def test_defaults_without_env(self):
+        import os
+        from unittest import mock
+
+        import importlib
+
+        import obeval.config as cfg
+
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("OBEVAL_GCP_LOCATION", "OBEVAL_MODEL", "OBEVAL_THINKING")}
+        try:
+            with mock.patch.dict(os.environ, env, clear=True):
+                importlib.reload(cfg)
+                self.assertEqual(cfg.GCP_LOCATION, "global")
+                self.assertEqual(cfg.DEFAULT_MODEL, "gemini-3.8-flash")
+                self.assertEqual(cfg.DEFAULT_THINKING_BUDGET, 0)
+        finally:
+            importlib.reload(cfg)  # trả lại trạng thái theo môi trường thật
+
+    def test_pricing_has_new_models_and_keeps_25(self):
+        import obeval.config as cfg
+
+        for m in ("gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.8-flash",
+                  "gemini-2.5-pro", "gemini-2.5-flash"):
+            self.assertIn(m, cfg.PRICING)
+            self.assertEqual(set(cfg.PRICING[m]), {"input", "output"})
+
+    def test_default_call_sends_thinking_budget_zero(self):
+        """Đường mặc định phải gửi thinking_budget=0 thật (không bị biến thành None)."""
+        from unittest import mock
+
+        from obeval import llm
+
+        captured = {}
+
+        class FakeModels:
+            def generate_content(self, model, contents, config):
+                captured["model"] = model
+                captured["thinking_budget"] = config.thinking_config.thinking_budget
+                return mock.Mock(text="{}", usage_metadata=None, candidates=[], model_version="x")
+
+        fake = mock.Mock(models=FakeModels())
+        with mock.patch.object(llm, "_client", return_value=fake):
+            llm.call("s", "u", {"type": "object"})
+        self.assertEqual(captured["thinking_budget"], 0)
+        self.assertEqual(captured["model"], "gemini-3.8-flash")
+
+
 if __name__ == "__main__":
     unittest.main()

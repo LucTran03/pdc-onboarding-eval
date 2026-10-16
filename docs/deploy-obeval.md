@@ -289,7 +289,7 @@ NAME=obeval-dev
 gcloud run deploy $NAME --source . --project $P_RUN --region $REGION --service-account $SA \
   --timeout 900 --concurrency 1 --max-instances 5 --memory 1Gi --cpu 1 --allow-unauthenticated \
   --set-secrets "OBEVAL_DB_DSN=obeval-db-dsn:latest,OBEVAL_API_TOKEN=obeval-api-token:latest,/secrets/script/script.md=obeval-script:latest" \
-  --set-env-vars "OBEVAL_SCRIPT=/secrets/script/script.md,OBEVAL_PUBLISH=false,OBEVAL_GOOD_THRESHOLD=0.80,OBEVAL_GCP_PROJECT=tcservices2027,OBEVAL_GCP_LOCATION=us-central1,OBEVAL_TEMP_TRANSCRIPT_URL=$TT_URL,OBEVAL_TASKS_PROJECT=$P_RUN,OBEVAL_TASKS_LOCATION=$REGION,OBEVAL_TASKS_QUEUE=obeval-onboarding"
+  --set-env-vars "OBEVAL_SCRIPT=/secrets/script/script.md,OBEVAL_PUBLISH=false,OBEVAL_GOOD_THRESHOLD=0.80,OBEVAL_GCP_PROJECT=tcservices2027,OBEVAL_GCP_LOCATION=global,OBEVAL_MODEL=gemini-3.8-flash,OBEVAL_THINKING=0,OBEVAL_TEMP_TRANSCRIPT_URL=$TT_URL,OBEVAL_TASKS_PROJECT=$P_RUN,OBEVAL_TASKS_LOCATION=$REGION,OBEVAL_TASKS_QUEUE=obeval-onboarding"
 URL=$(gcloud run services describe $NAME --project $P_RUN --region $REGION --format="value(status.url)")
 gcloud run services update $NAME --project $P_RUN --region $REGION --update-env-vars OBEVAL_SELF_URL=$URL
 curl -s $URL/healthz
@@ -329,7 +329,7 @@ NAME=obeval
 gcloud run deploy $NAME --source . --project $P_RUN --region $REGION --service-account $SA \
   --timeout 900 --concurrency 1 --max-instances 5 --memory 1Gi --cpu 1 --allow-unauthenticated \
   --set-secrets "OBEVAL_DB_DSN=obeval-db-dsn-prod:latest,OBEVAL_API_TOKEN=obeval-api-token-prod:latest,/secrets/script/script.md=obeval-script:latest" \
-  --set-env-vars "OBEVAL_SCRIPT=/secrets/script/script.md,OBEVAL_PUBLISH=false,OBEVAL_GOOD_THRESHOLD=0.80,OBEVAL_GCP_PROJECT=tcservices2027,OBEVAL_GCP_LOCATION=us-central1,OBEVAL_TEMP_TRANSCRIPT_URL=$TT_URL,OBEVAL_TASKS_PROJECT=$P_RUN,OBEVAL_TASKS_LOCATION=$REGION,OBEVAL_TASKS_QUEUE=obeval-onboarding"
+  --set-env-vars "OBEVAL_SCRIPT=/secrets/script/script.md,OBEVAL_PUBLISH=false,OBEVAL_GOOD_THRESHOLD=0.80,OBEVAL_GCP_PROJECT=tcservices2027,OBEVAL_GCP_LOCATION=global,OBEVAL_MODEL=gemini-3.8-flash,OBEVAL_THINKING=0,OBEVAL_TEMP_TRANSCRIPT_URL=$TT_URL,OBEVAL_TASKS_PROJECT=$P_RUN,OBEVAL_TASKS_LOCATION=$REGION,OBEVAL_TASKS_QUEUE=obeval-onboarding"
 URL=$(gcloud run services describe $NAME --project $P_RUN --region $REGION --format="value(status.url)")
 gcloud run services update $NAME --project $P_RUN --region $REGION --update-env-vars OBEVAL_SELF_URL=$URL
 curl -s $URL/healthz
@@ -378,9 +378,9 @@ Giá trị lấy từ code: `obeval/config.py`, `app.py`, `store.py`, `tasks.py`
 | `OBEVAL_GOOD_THRESHOLD` | `0.80` | **PDC chốt.** `0.80` là tạm thời. Đổi không cần chấm lại | Không (mặc định `0.80`) |
 | `OBEVAL_RUNS` | `3` | Mặc định `3`. Nếu nghiệm thu (`docs/nghiem-thu.md`) kết luận cần thì `5` (chi phí mỗi ca tăng khoảng 5/3) | Không |
 | `OBEVAL_GCP_PROJECT` | `tcservices2027` | Project có Vertex AI. Phải khớp project đã cấp `aiplatform.user` | Không (mặc định `tcservices2027`) |
-| `OBEVAL_GCP_LOCATION` | `us-central1` | Vùng Vertex AI | Không (mặc định `us-central1`) |
-| `OBEVAL_MODEL` | `gemini-2.5-pro` | Model chấm | Không |
-| `OBEVAL_THINKING` | `16384` | Ngân sách "suy nghĩ" của model | Không |
+| `OBEVAL_GCP_LOCATION` | `global` | Vùng Vertex AI (Gemini 3.x chạy ở endpoint `global`) | Không (mặc định `global`) |
+| `OBEVAL_MODEL` | `gemini-3.8-flash` | Model chấm (Gemini 2.5 ngừng trên Vertex từ 20/10/2026) | Không (mặc định `gemini-3.8-flash`) |
+| `OBEVAL_THINKING` | `0` | Ngân sách "suy nghĩ" của model (0 = tắt) | Không (mặc định `0`) |
 | `OBEVAL_ENSEMBLE_TEMPERATURE` | `1.0` | Nhiệt độ các lần chấm | Không |
 | `OBEVAL_NE_RATIO` | `0.30` | Tỉ lệ tiêu chí "không đánh giá được" thì coi là thiếu dữ liệu. PDC chưa chốt | Không |
 
